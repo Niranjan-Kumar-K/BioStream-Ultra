@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioStream Ultra | DNA Pro</title>
+    
+    <meta name="google-site-verification" content="PASTE_YOUR_CODE_FROM_GOOGLE_HERE" />
+
+    <title>BioStream Ultra | DNA Analysis Pro</title>
+    <meta name="title" content="BioStream Ultra | DNA Analysis Pro">
+    <meta name="description" content="A powerful, real-time bioinformatics tool for DNA sequence analysis, GC content calculation, and protein translation.">
+    <meta name="keywords" content="DNA, Bioinformatics, Genetic Analysis, Protein Translation, GC Content, Biology Tool, BioStream">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://biostream-ultra.onrender.com/">
+    <meta property="og:title" content="BioStream Ultra | DNA Analysis Engine">
+    <meta property="og:description" content="Instant DNA to Protein translation and sequence metrics.">
+    <meta property="og:image" content="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/png/dna.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #00f2fe; --secondary: #4facfe; }
@@ -16,7 +29,8 @@
             padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
             width: 90%; max-width: 800px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
-        h1 { text-align: center; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { text-align: center; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
+        .subtitle { text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 20px; }
         textarea { 
             width: 100%; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.3);
             color: var(--primary); border: 1px solid #333; font-family: monospace; resize: vertical; box-sizing: border-box;
@@ -31,11 +45,14 @@
         .results { margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
         .scroll-box { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.8rem; color: #0f0; margin-top: 5px; }
+        footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #555; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1><i class="fas fa-dna"></i> BioStream Ultra</h1>
+        <div class="subtitle">Advanced Cloud-Based Sequence Processor</div>
+        
         <form method="POST">
             <textarea name="sequence" rows="6" maxlength="50000" placeholder="Paste DNA/RNA sequence here (Max 50,000 bp)..." required></textarea>
             <div class="btn-group">
@@ -59,6 +76,8 @@
             </div>
         </div>
         {% endif %}
+        
+        <footer>Optimized for Genomic Research & Analysis</footer>
     </div>
 </body>
 </html>
