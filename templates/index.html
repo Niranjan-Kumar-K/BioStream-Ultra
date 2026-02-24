@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>BioStream | Hub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --primary-green: #00ff88; --deep-green: #00ad5e; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; height: 100vh; margin: 0; display: flex; align-items: center; justify-content: center; }
-        .hub-container { text-align: center; }
-        h1 { font-size: 3rem; font-weight: 900; background: linear-gradient(to bottom, var(--primary-green), var(--deep-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 200px); gap: 20px; }
-        .menu-card { background: white; padding: 30px; border-radius: 20px; text-decoration: none; color: #333; font-weight: 900; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; border-bottom: 5px solid #ddd; }
-        .menu-card:hover { transform: translateY(-10px); border-color: var(--primary-green); }
+        body { 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+            font-family: 'Inter', sans-serif; height: 100vh; margin: 0; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 { font-size: 3.5rem; font-weight: 900; background: linear-gradient(to bottom, var(--primary-green), var(--deep-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -2px; }
+        p { color: #888; font-weight: 700; margin-bottom: 40px; letter-spacing: 1px; font-size: 0.8rem; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 220px); gap: 20px; }
+        .menu-card { 
+            background: white; padding: 40px 20px; border-radius: 25px; text-decoration: none; color: #333; 
+            font-weight: 900; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s; 
+            border-bottom: 5px solid #ddd; text-align: center;
+        }
+        .menu-card i { font-size: 2.5rem; display: block; margin-bottom: 15px; color: var(--deep-green); }
+        .menu-card:hover { transform: translateY(-10px); border-color: var(--primary-green); box-shadow: 0 15px 30px rgba(0,255,136,0.2); }
+        .status-bar { margin-top: 50px; font-size: 0.7rem; color: #aaa; letter-spacing: 2px; font-weight: 900; }
     </style>
 </head>
 <body>
-    <div class="hub-container">
-        <h1>BIOSTREAM ULTRA</h1>
-        <div class="menu-grid">
-            <a href="/analyzer" class="menu-card">DNA ANALYZER</a>
-            <a href="/amr" class="menu-card">AMR SCOUT</a>
-            <a href="/primer" class="menu-card">PRIMER LAB</a>
-        </div>
+    <h1>BIOSTREAM ULTRA</h1>
+    <p>ADVANCED GENOMIC COMPUTATION v2.0</p>
+    <div class="menu-grid">
+        <a href="/analyzer" class="menu-card"><i class="fas fa-microscope"></i>DNA ANALYZER</a>
+        <a href="/amr" class="menu-card"><i class="fas fa-shield-virus"></i>AMR SCOUT</a>
+        <a href="/primer" class="menu-card"><i class="fas fa-dna"></i>PRIMER LAB</a>
     </div>
+    <div class="status-bar"><span style="color:var(--primary-green)">●</span> SYSTEM READY | DB: BIOPYTHON-CORE</div>
 </body>
 </html>
