@@ -1,65 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="googleef6af1ecd1562b9e" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BioStream Ultra | Suite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #0b0e14; }
+        :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #080a0f; }
         body { 
-            background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif;
-            margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
+            background: radial-gradient(circle at center, #1a1f2c 0%, var(--dark) 100%); 
+            color: white; font-family: 'Segoe UI', sans-serif; margin: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
         }
         .header { text-align: center; margin-bottom: 50px; }
-        .header h1 { font-size: 3rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; width: 90%; max-width: 1000px; 
-        }
+        .header h1 { font-size: 3.5rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 90%; max-width: 1000px; }
         .card { 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;
-            transition: 0.3s; text-decoration: none; color: white;
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 25px;
+            text-align: center; cursor: pointer; transition: 0.4s; text-decoration: none; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .card:hover { 
-            transform: translateY(-10px); background: rgba(255, 255, 255, 0.1); 
-            border-color: var(--primary); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
-        }
-        .card i { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
-        .card h2 { margin: 10px 0; }
-        .card p { color: #888; font-size: 0.9rem; }
-        .badge { background: var(--primary); color: var(--dark); font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); background: rgba(255,255,255,0.07); }
+        .card i { font-size: 3rem; color: var(--primary); margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
+        .badge { background: var(--primary); color: var(--dark); font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>BIOSTREAM <span style="font-weight: 300;">ULTRA</span></h1>
-        <p>Select a specialized bioinformatics module to begin.</p>
+        <h1>BIOSTREAM <span style="font-weight: 200;">ULTRA</span></h1>
+        <p style="color: #888; letter-spacing: 2px;">ADVANCED BIOINFORMATICS CONSOLE</p>
     </div>
-
     <div class="grid">
         <a href="/analyzer" class="card">
             <i class="fas fa-microscope"></i>
-            <h2>DNA Streamline</h2>
-            <p>Sequence analysis, GC content, and Protein translation.</p>
+            <h2>DNA ANALYZER</h2>
+            <p style="color:#aaa;">General metrics & translation</p>
             <span class="badge">ACTIVE</span>
         </a>
-
-        <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
+        <a href="/amr" class="card">
             <i class="fas fa-shield-virus"></i>
-            <h2>AMR Scout</h2>
-            <p>Anti-Microbial Resistance gene detection & mapping.</p>
-            <span class="badge" style="background: #555;">COMING SOON</span>
+            <h2>AMR SCOUT</h2>
+            <p style="color:#aaa;">Resistance gene detection</p>
+            <span class="badge">ACTIVE</span>
         </a>
-
-        <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
-            <i class="fas fa-search-dna"></i>
-            <h2>NCBI BLAST</h2>
-            <p>Compare sequences against global genomic databases.</p>
-            <span class="badge" style="background: #555;">UPGRADE</span>
+        <a href="/primer" class="card">
+            <i class="fas fa-vial"></i>
+            <h2>PRIMER LAB</h2>
+            <p style="color:#aaa;">PCR design & Tm math</p>
+            <span class="badge">ACTIVE</span>
         </a>
     </div>
 </body>
