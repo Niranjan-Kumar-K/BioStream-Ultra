@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>BioStream | AMR Scout</title>
-    <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/svgs/solid/dna.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { --danger: #ff4b2b; --dark: #080a0f; }
-        body { background: radial-gradient(circle at center, #2c1a1a 0%, var(--dark) 100%); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .nav { width: 100%; max-width: 850px; margin-bottom: 15px; }
-        .nav a { color: var(--danger); text-decoration: none; font-weight: bold; font-size: 0.8rem; letter-spacing: 1px; }
-        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 75, 43, 0.2); border-radius: 25px; padding: 40px; width: 100%; max-width: 850px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
-        h1 { text-align: center; color: var(--danger); font-weight: 800; letter-spacing: -1px; }
-        textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #331111; border-radius: 15px; color: #ffb75e; padding: 20px; font-family: monospace; box-sizing: border-box; }
-        .btn-amr { background: linear-gradient(45deg, #ff4b2b, #ff0000); border: none; color: white; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; margin-top: 20px; letter-spacing: 2px; }
-        .alert-box { background: rgba(255, 0, 0, 0.1); padding: 20px; border-radius: 15px; border-left: 5px solid var(--danger); margin-top: 25px; }
+        :root { --primary-green: #00ff88; --deep-green: #00ad5e; --alert-red: #ff4757; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .btn-back { display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; border: 1px solid #ddd; margin-bottom: 20px; }
+        .glass-panel { background: rgba(255,255,255,0.9); padding: 40px; border-radius: 25px; width: 100%; max-width: 850px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        h1 { font-weight: 900; background: linear-gradient(to bottom, var(--primary-green), var(--deep-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #eee; font-family: 'Inter'; font-weight: 900; box-sizing: border-box; }
+        .btn-exec { width:100%; padding:15px; margin-top:10px; border-radius:10px; background:var(--primary-green); border:none; font-weight:900; cursor:pointer; }
+        .alert-box { margin-top: 20px; padding: 20px; border-radius: 15px; font-weight: 900; text-align: center; border: 2px solid var(--alert-red); color: var(--alert-red); background: #fff1f2; }
+        .safe-box { margin-top: 20px; padding: 20px; border-radius: 15px; font-weight: 900; text-align: center; border: 2px solid var(--deep-green); color: var(--deep-green); background: #f0fff4; }
     </style>
 </head>
 <body>
-    <div class="nav"><a href="/"><i class="fas fa-chevron-left"></i> RETURN TO HUB</a></div>
+    <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> RETURN TO HUB</a>
     <div class="glass-panel">
-        <h1><i class="fas fa-shield-virus"></i> AMR SCOUT</h1>
-        <form action="/amr" method="POST">
-            <textarea name="sequence" rows="8" placeholder="PASTE BACTERIAL DNA FOR SCANNING..."></textarea>
-            <button type="submit" class="btn-amr">RUN RESISTANCE SCAN</button>
+        <h1>AMR SCOUT</h1>
+        <form method="POST">
+            <textarea name="sequence" rows="4" placeholder="PASTE BACTERIAL SEQUENCE..."></textarea>
+            <button type="submit" class="btn-exec">SCAN FOR RESISTANCE</button>
         </form>
         {% if amr_results %}
-        <div class="alert-box">
-            <h3 style="margin:0; color:var(--danger);"><i class="fas fa-biohazard"></i> SYSTEM REPORT</h3>
-            <p style="margin-top:10px; font-family: monospace;">{{ amr_results }}</p>
-        </div>
+            {% if "WARNING" in amr_results %}
+                <div class="alert-box">{{ amr_results }}</div>
+            {% else %}
+                <div class="safe-box">{{ amr_results }}</div>
+            {% endif %}
         {% endif %}
     </div>
 </body>
