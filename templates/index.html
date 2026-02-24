@@ -11,92 +11,102 @@
         :root { 
             --primary-green: #00ff88; 
             --deep-green: #00ad5e; 
+            --amr-red: #ff4757;
+            --primer-blue: #4facfe;
         }
 
         body { 
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
             font-family: 'Inter', sans-serif; 
-            height: 100vh; margin: 0; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
             overflow: hidden;
         }
 
-        /* FIXED SLIMY TEXT LOGIC */
-        .title-container {
-            position: relative;
+        /* SOLID GRADIENT TITLE (NO WHITE BOXES) */
+        h1 { 
+            font-size: 4.5rem; 
+            font-weight: 900; 
+            margin: 0;
+            letter-spacing: -3px;
+            background: linear-gradient(to bottom, var(--primary-green), var(--deep-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        p { 
+            color: #888; 
+            font-weight: 900; 
+            margin-bottom: 40px; 
+            letter-spacing: 2px; 
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* Menu Grid */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 230px); 
+            gap: 25px; 
+        }
+
+        .menu-card { 
+            background: white; 
+            padding: 45px 20px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            color: #333; 
+            font-weight: 900; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border-bottom: 6px solid #ddd; 
             text-align: center;
         }
 
-        h1 {
-            font-size: 5rem;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -3px;
-            text-transform: uppercase;
-            
-            /* The Magic: Clip everything to the text */
-            color: transparent;
-            background: #e1e1e1; /* Base "empty" color */
-            position: relative;
-            background-clip: text;
-            -webkit-background-clip: text;
+        .menu-card i { 
+            font-size: 2.8rem; 
+            display: block; 
+            margin-bottom: 15px; 
         }
 
-        /* This is the actual moving liquid layer */
-        .liquid-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(to bottom, var(--primary-green), var(--deep-green));
-            
-            /* Clip this layer to the text too */
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            
-            /* Use a mask to create the wavy movement */
-            mask-image: url('https://raw.githubusercontent.com/front-end-rookie/fluid-text-animation/main/wave.png');
-            -webkit-mask-image: url('https://raw.githubusercontent.com/front-end-rookie/fluid-text-animation/main/wave.png');
-            mask-size: 200% 100%;
-            -webkit-mask-size: 200% 100%;
-            
-            animation: moveWave 4s infinite linear;
-            z-index: 2;
+        /* HOVER EFFECTS - CARD MOVEMENT */
+        .menu-card:hover { 
+            transform: translateY(-15px); 
         }
 
-        @keyframes moveWave {
-            0% { mask-position: 0% 50%; -webkit-mask-position: 0% 50%; }
-            100% { mask-position: 100% 50%; -webkit-mask-position: 100% 50%; }
+        /* UNIQUE HOVER COLORS PER TOOL */
+        .card-analyzer:hover { 
+            border-color: var(--primary-green); 
+            box-shadow: 0 20px 40px rgba(0,255,136,0.25);
         }
-
-        /* Hub Layout Styles */
-        p { color: #888; font-weight: 900; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; }
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 230px); gap: 25px; }
-        .menu-card { 
-            background: white; padding: 45px 20px; border-radius: 30px; text-decoration: none; 
-            color: #333; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            border-bottom: 6px solid #ddd; text-align: center;
-        }
-        .menu-card i { font-size: 2.8rem; display: block; margin-bottom: 15px; }
-        .menu-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,255,136,0.2); }
         
-        /* Interactive Colors */
-        .card-analyzer:hover { border-color: var(--primary-green); }
-        .card-amr:hover { border-color: #ff4757; }
-        .card-primer:hover { border-color: #4facfe; }
+        .card-amr:hover { 
+            border-color: var(--amr-red); 
+            box-shadow: 0 20px 40px rgba(255,71,87,0.25);
+        }
+        
+        .card-primer:hover { 
+            border-color: var(--primer-blue); 
+            box-shadow: 0 20px 40px rgba(79,172,254,0.25);
+        }
 
-        .status-bar { margin-top: 60px; font-size: 0.7rem; color: #aaa; letter-spacing: 3px; font-weight: 900; }
+        .status-bar { 
+            margin-top: 60px; 
+            font-size: 0.7rem; 
+            color: #aaa; 
+            letter-spacing: 3px; 
+            font-weight: 900; 
+        }
     </style>
 </head>
 <body>
 
-    <div class="title-container">
-        <h1>
-            BIOSTREAM ULTRA
-            <div class="liquid-overlay">BIOSTREAM ULTRA</div>
-        </h1>
-    </div>
+    <h1>BIOSTREAM ULTRA</h1>
     <p>Advanced Genomic Computation Suite v2.0</p>
 
     <div class="menu-grid">
@@ -105,11 +115,11 @@
             DNA ANALYZER
         </a>
         <a href="/amr" class="menu-card card-amr">
-            <i class="fas fa-shield-virus" style="color: #ff4757;"></i>
+            <i class="fas fa-shield-virus" style="color: var(--amr-red);"></i>
             AMR SCOUT
         </a>
         <a href="/primer" class="menu-card card-primer">
-            <i class="fas fa-dna" style="color: #4facfe;"></i>
+            <i class="fas fa-dna" style="color: var(--primer-blue);"></i>
             PRIMER LAB
         </a>
     </div>
