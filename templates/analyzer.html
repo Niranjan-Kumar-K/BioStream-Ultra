@@ -13,7 +13,19 @@
         .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primary); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
         .btn-back:hover { background: var(--primary); color: white; }
         h1 { font-size: 2.5rem; background: linear-gradient(to bottom, #00ff88, #00ad5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 25px 0; }
-        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; }
+        
+        /* THE ANIMATED INPUT BAR */
+        textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; 
+            font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box;
+            transition: all 0.4s ease; outline: none; background: var(--card); color: var(--text);
+        }
+        textarea:hover, textarea:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            transform: translateY(-2px);
+        }
+
         .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
         .stat-card { background: rgba(0,255,136,0.1); padding: 20px; border-radius: 18px; border-bottom: 5px solid var(--primary); }
         .stat-label { color: #888; font-size: 0.7rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
@@ -25,14 +37,18 @@
     <a href="/" class="btn-back">RETURN TO HUB</a>
     <div class="glass-panel">
         <h1>DNA ANALYZER</h1>
-        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea><button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--primary); border:none; color:white; font-weight:900; cursor:pointer;">EXECUTE ANALYSIS</button></form>
+        <form method="POST">
+            <textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea>
+            <button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--primary); border:none; color:white; font-weight:900; cursor:pointer;">EXECUTE ANALYSIS</button>
+        </form>
         {% if results %}
         <div class="results-grid">
             <div class="stat-card"><span class="stat-label">Length</span><div class="stat-value">{{ results.length }} BP</div></div>
             <div class="stat-card"><span class="stat-label">DNA Mass</span><div class="stat-value">{{ results.dna_mass }}</div></div>
             <div class="stat-card"><span class="stat-label">Protein Mass</span><div class="stat-value">{{ results.protein_mass }}</div></div>
-            <div class="stat-card" style="border-bottom-color: #4facfe;"><span class="stat-label">Restriction Sites & Locations</span><div class="stat-value" style="color: #4facfe;">{{ results.restriction }}</div></div>
-            <div class="stat-card" style="grid-column: span 2; border-bottom-color: #ff4757;"><span class="stat-label">Origin of Replication (ORI)</span><div class="stat-value" style="color: #ff4757;">{{ results.ori }}</div></div>
+            
+            <div class="stat-card"><span class="stat-label">Restriction Sites & Locations</span><div class="stat-value">{{ results.restriction }}</div></div>
+            <div class="stat-card" style="grid-column: span 2;"><span class="stat-label">Origin of Replication (ORI)</span><div class="stat-value">{{ results.ori }}</div></div>
         </div>
         <div style="margin-top:20px; padding:20px; border-radius:18px; border: 2px solid var(--primary);">
             <span class="stat-label">3-Letter Translation</span><div class="code-display">{{ results.translation }}</div>
