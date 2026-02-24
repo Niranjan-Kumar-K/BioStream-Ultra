@@ -21,10 +21,10 @@
             overflow: hidden;
         }
 
-        /* LIQUID WAVE TITLE LOGIC */
+        /* SLIMY RANDOM LIQUID LOGIC */
         .title-container {
             position: relative;
-            margin-bottom: 5px;
+            overflow: hidden;
         }
 
         h1 {
@@ -34,30 +34,45 @@
             letter-spacing: -3px;
             text-transform: uppercase;
             position: relative;
-            color: #e1e1e1; /* The "Empty" container color */
+            color: rgba(0,0,0,0.05); /* The "Ghost" background of the letters */
+            z-index: 1;
         }
 
-        h1::before {
-            content: "BIOSTREAM ULTRA";
+        /* The Liquid Layer */
+        .liquid {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: linear-gradient(to bottom, var(--primary-green), var(--deep-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            /* This creates the "Fluid Fill" level */
-            clip-path: inset(50% 0 0 0); 
-            animation: fluidFill 4s ease-in-out infinite alternate;
+            z-index: 2;
+            /* Masking the liquid to the text */
+            pointer-events: none;
         }
 
-        @keyframes fluidFill {
-            0% { clip-path: inset(70% 0 0 0); }
-            100% { clip-path: inset(20% 0 0 0); }
+        /* The Slime Wave Overlay */
+        h1::after {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: #f5f7fa; /* Matches page background to "cut" the liquid */
+            border-radius: 40%; /* Creates the wobbly/slimy curve */
+            animation: slimeFlow 6s infinite linear;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        @keyframes slimeFlow {
+            0% { transform: rotate(0deg) translateY(45%); }
+            50% { transform: rotate(180deg) translateY(55%); }
+            100% { transform: rotate(360deg) translateY(45%); }
         }
 
         /* Hub Layout Styles */
-        p { color: #888; font-weight: 900; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; }
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 230px); gap: 25px; }
+        p { color: #888; font-weight: 900; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; z-index: 4; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 230px); gap: 25px; z-index: 4; }
         .menu-card { 
             background: white; padding: 45px 20px; border-radius: 30px; text-decoration: none; 
             color: #333; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
@@ -72,13 +87,16 @@
         .card-amr:hover { border-color: #ff4757; }
         .card-primer:hover { border-color: #4facfe; }
 
-        .status-bar { margin-top: 60px; font-size: 0.7rem; color: #aaa; letter-spacing: 3px; font-weight: 900; }
+        .status-bar { margin-top: 60px; font-size: 0.7rem; color: #aaa; letter-spacing: 3px; font-weight: 900; z-index: 4; }
     </style>
 </head>
 <body>
 
     <div class="title-container">
-        <h1>BIOSTREAM ULTRA</h1>
+        <h1>
+            BIOSTREAM ULTRA
+            <div class="liquid">BIOSTREAM ULTRA</div>
+        </h1>
     </div>
     <p>Advanced Genomic Computation Suite v2.0</p>
 
