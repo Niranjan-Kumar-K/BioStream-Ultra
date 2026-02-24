@@ -10,17 +10,21 @@
         :root { --primary-green: #00ff88; --deep-green: #00ad5e; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
         .btn-back { display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; border: 1px solid #ddd; margin-bottom: 20px; transition: 0.3s; }
-        .btn-back:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
+        .btn-back:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3); }
+        
         .glass-panel { background: rgba(255,255,255,0.9); padding: 40px; border-radius: 25px; width: 100%; max-width: 850px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         h1, .stat-value { font-weight: 900; background: linear-gradient(to bottom, var(--primary-green), var(--deep-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #eee; font-family: 'Inter'; font-weight: 900; box-sizing: border-box; }
+        
         .btn-exec { width:100%; padding:18px; margin-top:10px; border-radius:12px; background: white; border: 2px solid var(--primary-green); color: var(--deep-green); font-weight:900; cursor:pointer; transition: 0.3s; }
-        /* GREEN HOVER FOR ANALYZER */
         .btn-exec:hover { background: var(--primary-green); color: white; box-shadow: 0 0 20px rgba(0,255,136,0.4); }
-        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
         .stat-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary-green); animation: fadeInUp 0.5s ease forwards; }
-        .code-block { background: #f8f9fa; padding: 12px; border-radius: 10px; word-break: break-all; font-weight: 900; border: 1px solid #eee; color: #333; }
+        .stat-card small { color: #888; font-weight: 900; letter-spacing: 1px; }
+        .code-block { background: #f8f9fa; padding: 12px; border-radius: 10px; word-break: break-all; font-weight: 900; border: 1px solid #eee; color: #333; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -31,14 +35,22 @@
             <textarea name="sequence" rows="4" placeholder="INPUT SEQUENCE..."></textarea>
             <button type="submit" class="btn-exec">EXECUTE ANALYSIS</button>
         </form>
+
         {% if results %}
         <div class="results-grid">
             <div class="stat-card"><small>LENGTH</small><div class="stat-value">{{ results.length }} bp</div></div>
-            <div class="stat-card"><small>DNA MASS</small><div class="stat-value" style="font-size:1.2rem">{{ results.dna_mass }}</div></div>
-            <div class="stat-card" style="grid-column: span 2;"><small>RESTRICTION MAP</small>
-                <div style="font-weight:900; color:var(--deep-green); margin-top:5px;">{% for s in results.restriction_sites %}> {{ s }}<br>{% endfor %}</div>
+            <div class="stat-card"><small>DNA MASS</small><div class="stat-value" style="font-size:1.1rem">{{ results.dna_mass }}</div></div>
+            <div class="stat-card"><small>PROTEIN MASS</small><div class="stat-value" style="font-size:1.1rem">{{ results.protein_mass }}</div></div>
+            
+            <div class="stat-card" style="grid-column: span 3;"><small>RESTRICTION MAP</small>
+                <div style="font-weight:900; color:var(--deep-green); margin-top:5px;">
+                    {% for s in results.restriction_sites %}> {{ s }}<br>{% endfor %}
+                </div>
             </div>
-            <div class="stat-card" style="grid-column: span 2;"><small>TRANSLATION</small><div class="code-block">{{ results.translation }}</div></div>
+            
+            <div class="stat-card" style="grid-column: span 3;"><small>TRANSLATION (AMINO ACIDS)</small>
+                <div class="code-block">{{ results.translation if results.translation else "None (No Start Codon)" }}</div>
+            </div>
         </div>
         {% endif %}
     </div>
