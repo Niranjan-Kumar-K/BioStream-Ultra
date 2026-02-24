@@ -16,95 +16,63 @@
         body { 
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
             font-family: 'Inter', sans-serif; 
-            height: 100vh; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
+            height: 100vh; margin: 0; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             overflow: hidden;
         }
 
-        /* The Fluid Flow Title */
+        /* LIQUID WAVE TITLE LOGIC */
         .title-container {
             position: relative;
             margin-bottom: 5px;
         }
 
-        h1 { 
-            font-size: 4.5rem; 
-            font-weight: 900; 
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
             margin: 0;
             letter-spacing: -3px;
-            color: rgba(0, 173, 94, 0.2); /* Base faint color */
-            background-image: url('https://raw.githubusercontent.com/front-end-rookie/fluid-text-animation/main/wave.png'); 
-            background-repeat: repeat-x;
-            background-position: 0 100px;
-            -webkit-background-clip: text;
-            animation: wave 5s infinite linear;
-        }
-
-        @keyframes wave {
-            0% { background-position: 0 100px; }
-            50% { background-position: 500px 80px; }
-            100% { background-position: 1000px 100px; }
-        }
-
-        /* Subtitle */
-        p { 
-            color: #888; 
-            font-weight: 900; 
-            margin-bottom: 40px; 
-            letter-spacing: 2px; 
-            font-size: 0.8rem;
             text-transform: uppercase;
+            position: relative;
+            color: #e1e1e1; /* The "Empty" container color */
         }
 
-        /* Menu Grid */
-        .menu-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 230px); 
-            gap: 25px; 
+        h1::before {
+            content: "BIOSTREAM ULTRA";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, var(--primary-green), var(--deep-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* This creates the "Fluid Fill" level */
+            clip-path: inset(50% 0 0 0); 
+            animation: fluidFill 4s ease-in-out infinite alternate;
         }
 
+        @keyframes fluidFill {
+            0% { clip-path: inset(70% 0 0 0); }
+            100% { clip-path: inset(20% 0 0 0); }
+        }
+
+        /* Hub Layout Styles */
+        p { color: #888; font-weight: 900; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.8rem; text-transform: uppercase; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 230px); gap: 25px; }
         .menu-card { 
-            background: white; 
-            padding: 45px 20px; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            color: #333; 
-            font-weight: 900; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            background: white; padding: 45px 20px; border-radius: 30px; text-decoration: none; 
+            color: #333; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            border-bottom: 6px solid #ddd; 
-            text-align: center;
+            border-bottom: 6px solid #ddd; text-align: center;
         }
-
-        .menu-card i { 
-            font-size: 2.8rem; 
-            display: block; 
-            margin-bottom: 15px; 
-            color: var(--deep-green); 
-        }
-
-        /* Hover Effects */
-        .menu-card:hover { 
-            transform: translateY(-15px); 
-            box-shadow: 0 20px 40px rgba(0,255,136,0.25);
-        }
-
-        /* Specific Hover Colors */
-        .card-analyzer:hover { border-color: #00ff88; }
+        .menu-card i { font-size: 2.8rem; display: block; margin-bottom: 15px; }
+        .menu-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,255,136,0.2); }
+        
+        /* Interactive Colors */
+        .card-analyzer:hover { border-color: var(--primary-green); }
         .card-amr:hover { border-color: #ff4757; }
         .card-primer:hover { border-color: #4facfe; }
 
-        .status-bar { 
-            margin-top: 60px; 
-            font-size: 0.7rem; 
-            color: #aaa; 
-            letter-spacing: 3px; 
-            font-weight: 900; 
-        }
+        .status-bar { margin-top: 60px; font-size: 0.7rem; color: #aaa; letter-spacing: 3px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -116,7 +84,7 @@
 
     <div class="menu-grid">
         <a href="/analyzer" class="menu-card card-analyzer">
-            <i class="fas fa-microscope" style="color: #00ff88;"></i>
+            <i class="fas fa-microscope" style="color: var(--primary-green);"></i>
             DNA ANALYZER
         </a>
         <a href="/amr" class="menu-card card-amr">
