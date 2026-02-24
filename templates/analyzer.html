@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>BioStream | Analyzer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #00ff88; --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
@@ -16,8 +17,8 @@
         .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
         .stat-card { background: rgba(0,255,136,0.1); padding: 20px; border-radius: 18px; border-bottom: 5px solid var(--primary); }
         .stat-label { color: #888; font-size: 0.7rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .stat-value { font-size: 1.2rem; color: var(--primary); }
-        .code-display { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; word-break: break-all; margin-top: 10px; border: 1px solid #ddd; font-size: 1rem; }
+        .stat-value { font-size: 1.1rem; color: var(--primary); }
+        .code-display { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; word-break: break-all; margin-top: 10px; border: 1px solid #ddd; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -30,6 +31,8 @@
             <div class="stat-card"><span class="stat-label">Length</span><div class="stat-value">{{ results.length }} BP</div></div>
             <div class="stat-card"><span class="stat-label">DNA Mass</span><div class="stat-value">{{ results.dna_mass }}</div></div>
             <div class="stat-card"><span class="stat-label">Protein Mass</span><div class="stat-value">{{ results.protein_mass }}</div></div>
+            <div class="stat-card" style="border-bottom-color: #4facfe;"><span class="stat-label">Restriction Sites</span><div class="stat-value" style="color: #4facfe;">{{ results.restriction }}</div></div>
+            <div class="stat-card" style="grid-column: span 2; border-bottom-color: #ff4757;"><span class="stat-label">ORI Finder</span><div class="stat-value" style="color: #ff4757;">{{ results.ori }}</div></div>
         </div>
         <div style="margin-top:20px; padding:20px; border-radius:18px; border: 2px solid var(--primary);">
             <span class="stat-label">3-Letter Translation</span><div class="code-display">{{ results.translation }}</div>

@@ -10,6 +10,21 @@ def get_3_letter_protein(one_letter_seq):
     if not one_letter_seq: return "None"
     return "-".join([IUPACData.protein_letters_1to3.get(aa, aa).capitalize() for aa in one_letter_seq])
 
+def find_restriction_sites(seq):
+    # Mapping common enzymes to their recognition sequences
+    enzymes = {
+        "EcoRI": "GAATTC", "BamHI": "GGATCC", 
+        "HindIII": "AAGCTT", "NotI": "GCGGCCGC",
+        "XhoI": "CTCGAG", "PstI": "CTGCAG"
+    }
+    found = [name for name, pattern in enzymes.items() if pattern in seq]
+    return ", ".join(found) if found else "No Major Sites Found"
+
+def find_ori(seq):
+    # Scanning for the pBR322/pUC high-copy origin signature
+    ori_sig = "TTGAGATC"
+    return "✅ pBR322/pUC ORI FOUND" if ori_sig in seq else "❌ NO STANDARD ORI"
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -25,11 +40,14 @@ def analyzer():
             prot_mass = "0.00 Da"
             if len(protein_seq) > 0:
                 prot_mass = f"{ProteinAnalysis(str(protein_seq)).molecular_weight():.2f} Da"
+            
             results = {
                 "length": len(seq_obj),
                 "dna_mass": f"{molecular_weight(seq_obj, 'DNA'):.2f} Da",
                 "protein_mass": prot_mass,
-                "translation": get_3_letter_protein(str(protein_seq))
+                "translation": get_3_letter_protein(str(protein_seq)),
+                "restriction": find_restriction_sites(seq),
+                "ori": find_ori(seq)
             }
     return render_template('analyzer.html', results=results)
 
