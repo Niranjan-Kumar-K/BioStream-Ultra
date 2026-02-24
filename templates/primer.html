@@ -26,8 +26,14 @@
         <form method="POST"><textarea name="sequence" rows="4" placeholder="INPUT STRAND..."></textarea><button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--primer); border:none; color:white; font-weight:900; cursor:pointer;">DESIGN PRIMERS</button></form>
         {% if primer_results %}
         <div class="p-grid">
-            <div class="p-card"><span style="color:#888; font-size:0.7rem;">FORWARD ({{ primer_results.f_tm }}°C)</span><div class="p-seq">{{ primer_results.f_primer }}</div></div>
-            <div class="p-card"><span style="color:#888; font-size:0.7rem;">REVERSE ({{ primer_results.r_tm }}°C)</span><div class="p-seq">{{ primer_results.r_primer }}</div></div>
+            <div class="p-card">
+                <span style="color:#888; font-size:0.7rem; font-weight:900;">FORWARD (5' → 3') | {{ primer_results.f_tm }}°C</span>
+                <div class="p-seq">{{ primer_results.f_primer }}</div>
+            </div>
+            <div class="p-card">
+                <span style="color:#888; font-size:0.7rem; font-weight:900;">REVERSE (5' → 3') | {{ primer_results.r_tm }}°C</span>
+                <div class="p-seq">{{ primer_results.r_primer }}</div>
+            </div>
         </div>
         {% endif %}
     </div>

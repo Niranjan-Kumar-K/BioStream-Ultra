@@ -3,6 +3,7 @@ from Bio.Seq import Seq
 from Bio.SeqUtils import molecular_weight
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from Bio.Data import IUPACData
+import re
 
 app = Flask(__name__)
 
@@ -11,19 +12,25 @@ def get_3_letter_protein(one_letter_seq):
     return "-".join([IUPACData.protein_letters_1to3.get(aa, aa).capitalize() for aa in one_letter_seq])
 
 def find_restriction_sites(seq):
-    # Mapping common enzymes to their recognition sequences
     enzymes = {
         "EcoRI": "GAATTC", "BamHI": "GGATCC", 
         "HindIII": "AAGCTT", "NotI": "GCGGCCGC",
         "XhoI": "CTCGAG", "PstI": "CTGCAG"
     }
-    found = [name for name, pattern in enzymes.items() if pattern in seq]
+    found = []
+    for name, site in enzymes.items():
+        # Find all occurrences of the site
+        indices = [str(m.start() + 1) for m in re.finditer(site, seq)]
+        if indices:
+            found.append(f"{name} (@{', '.join(indices)})")
     return ", ".join(found) if found else "No Major Sites Found"
 
 def find_ori(seq):
-    # Scanning for the pBR322/pUC high-copy origin signature
     ori_sig = "TTGAGATC"
-    return "✅ pBR322/pUC ORI FOUND" if ori_sig in seq else "❌ NO STANDARD ORI"
+    match = re.search(ori_sig, seq)
+    if match:
+        return f"✅ ORI FOUND at bp {match.start() + 1}"
+    return "❌ NO STANDARD ORI"
 
 @app.route('/')
 def index():
@@ -40,7 +47,6 @@ def analyzer():
             prot_mass = "0.00 Da"
             if len(protein_seq) > 0:
                 prot_mass = f"{ProteinAnalysis(str(protein_seq)).molecular_weight():.2f} Da"
-            
             results = {
                 "length": len(seq_obj),
                 "dna_mass": f"{molecular_weight(seq_obj, 'DNA'):.2f} Da",
