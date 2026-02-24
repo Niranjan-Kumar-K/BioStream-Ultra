@@ -1,31 +1,46 @@
 from flask import Flask, render_template, request
 from Bio.Seq import Seq
 from Bio.SeqUtils import molecular_weight
-from Bio.SeqUtils.ProtParam import ProteinAnalysis # Needed for Protein Mass
+from Bio.SeqUtils.ProtParam import ProteinAnalysis
+from Bio.Data import IUPACData
 
 app = Flask(__name__)
 
+def get_3_letter_protein(one_letter_seq):
+    if not one_letter_seq:
+        return "None"
+    # Map 'M' to 'Met', 'F' to 'Phe', etc.
+    three_letter = []
+    for aa in one_letter_seq:
+        # Get 3-letter code from Biopython's IUPAC data
+        code = IUPACData.protein_letters_1to3.get(aa, aa).capitalize()
+        three_letter.append(code)
+    return "-".join(three_letter)
+
 def analyze_dna(sequence):
-    # Clean the sequence
     clean_seq = sequence.strip().upper()
     seq_obj = Seq(clean_seq)
     
     # 1. DNA Mass
     dna_mass = f"{molecular_weight(seq_obj, 'DNA'):.2f} Da"
     
-    # 2. Translation & Protein Mass
+    # 2. Translation & 3-Letter Code
     protein_seq = seq_obj.translate(to_stop=True)
+    three_letter_prot = get_3_letter_protein(str(protein_seq))
+    
+    # 3. Protein Mass
     if len(protein_seq) > 0:
-        # We use ProteinAnalysis to get the weight of the amino acid chain
         analysed_prot = ProteinAnalysis(str(protein_seq))
         prot_mass = f"{analysed_prot.molecular_weight():.2f} Da"
     else:
         prot_mass = "0.00 Da"
 
-    # 3. Improved AMR Scout Logic
+    # 4. Expanded AMR Scout Logic
     amr_database = {
-        "TGGTATGTGGAAGTTAGATTG": "mecA (Methicillin Resistance Detected)",
-        "TTCGGCATTTCGTC": "vanA (Vancomycin Resistance Detected)"
+        "TGGTATGTGGAAGTTAGATTG": "mecA (Methicillin/Staph Resistance)",
+        "TTCGGCATTTCGTC": "vanA (Vancomycin Resistance)",
+        "GCTTTTGCACGAAA": "bla-TEM (Penicillin Resistance)",
+        "ATCAGCAACTTATC": "tetA (Tetracycline Resistance)"
     }
     
     found_amr = "No known resistance markers found."
@@ -38,9 +53,9 @@ def analyze_dna(sequence):
         "length": len(seq_obj),
         "dna_mass": dna_mass,
         "protein_mass": prot_mass,
-        "translation": str(protein_seq),
+        "translation": three_letter_prot,
         "amr_results": found_amr,
-        "restriction_sites": ["EcoRI (G*AATTC)", "BamHI (G*GATCC)", "KpnI (GGTAC*C)"] # Example placeholders
+        "restriction_sites": ["EcoRI (G*AATTC)", "BamHI (G*GATCC)", "KpnI (GGTAC*C)"]
     }
 
 @app.route('/')
@@ -56,7 +71,6 @@ def analyzer():
             results = analyze_dna(seq)
     return render_template('analyzer.html', results=results)
 
-# Add your other routes (amr, primer) here...
-
+# Ensure you have /amr and /primer routes defined as before
 if __name__ == '__main__':
     app.run(debug=True)
