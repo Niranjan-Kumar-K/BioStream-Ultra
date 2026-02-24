@@ -10,7 +10,6 @@
         :root { --primer-blue: #4facfe; --deep-blue: #00f2fe; }
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* THE FIXED BLUE BACK BUTTON */
         .btn-back { 
             display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; 
             color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; 
@@ -31,7 +30,10 @@
             cursor:pointer; transition: 0.3s; 
         }
         .btn-exec:hover { background: var(--primer-blue); color: white; box-shadow: 0 0 20px rgba(79,172,254,0.4); }
-        .primer-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primer-blue); margin-top: 15px; }
+        
+        .results-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .primer-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primer-blue); }
+        .primer-seq { word-break:break-all; font-family:monospace; font-weight:900; margin-top: 10px; color: #333; }
     </style>
 </head>
 <body>
@@ -40,12 +42,21 @@
         <h1>PRIMER LAB</h1>
         <form method="POST">
             <textarea name="sequence" rows="4" placeholder="INPUT TEMPLATE STRAND..."></textarea>
-            <button type="submit" class="btn-exec">DESIGN PRIMERS</button>
+            <button type="submit" class="btn-exec">DESIGN PRIMER PAIR</button>
         </form>
+        
         {% if primer_results %}
-        <div class="primer-card">
-            <div style="font-weight:900; color:var(--primer-blue)">FORWARD ({{ primer_results.f_tm }}°C):</div>
-            <div style="word-break:break-all; font-family:monospace; font-weight:900">{{ primer_results.f_primer }}</div>
+        <div class="results-container">
+            <div class="primer-card">
+                <small style="font-weight:900; color:#888;">FORWARD PRIMER</small>
+                <div style="font-weight:900; color:var(--primer-blue); font-size: 1.2rem;">{{ primer_results.f_tm }}°C</div>
+                <div class="primer-seq">{{ primer_results.f_primer }}</div>
+            </div>
+            <div class="primer-card">
+                <small style="font-weight:900; color:#888;">REVERSE PRIMER</small>
+                <div style="font-weight:900; color:var(--primer-blue); font-size: 1.2rem;">{{ primer_results.r_tm }}°C</div>
+                <div class="primer-seq">{{ primer_results.r_primer }}</div>
+            </div>
         </div>
         {% endif %}
     </div>
