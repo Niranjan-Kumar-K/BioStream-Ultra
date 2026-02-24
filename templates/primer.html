@@ -13,7 +13,22 @@
         .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primer); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
         .btn-back:hover { background: var(--primer); color: white; }
         h1 { font-size: 2.5rem; color: var(--primer); margin: 0 0 25px 0; }
-        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; }
+        
+        textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; 
+            font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box;
+            transition: all 0.4s ease; outline: none; background: var(--card); color: var(--text);
+        }
+        textarea:hover, textarea:focus { border-color: var(--primer); box-shadow: 0 0 15px rgba(79, 172, 254, 0.3); transform: translateY(-2px); }
+
+        .btn-design {
+            width: 100%; padding: 18px; border-radius: 12px; 
+            background: transparent; color: var(--primer); 
+            border: 3px solid var(--primer); font-weight: 900; 
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-design:hover { background: var(--primer); color: white; box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
+
         .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .p-card { background: rgba(79,172,254,0.1); padding: 20px; border-radius: 18px; border-left: 6px solid var(--primer); }
         .p-seq { word-break: break-all; font-size: 1rem; color: var(--text); font-weight: 900; margin-top: 5px; }
@@ -23,17 +38,14 @@
     <a href="/" class="btn-back">RETURN TO HUB</a>
     <div class="glass-panel">
         <h1>PRIMER LAB</h1>
-        <form method="POST"><textarea name="sequence" rows="4" placeholder="INPUT STRAND..."></textarea><button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--primer); border:none; color:white; font-weight:900; cursor:pointer;">DESIGN PRIMERS</button></form>
+        <form method="POST">
+            <textarea name="sequence" rows="4" placeholder="INPUT STRAND..."></textarea>
+            <button type="submit" class="btn-design">DESIGN PRIMERS</button>
+        </form>
         {% if primer_results %}
         <div class="p-grid">
-            <div class="p-card">
-                <span style="color:#888; font-size:0.7rem; font-weight:900;">FORWARD (5' → 3') | {{ primer_results.f_tm }}°C</span>
-                <div class="p-seq">{{ primer_results.f_primer }}</div>
-            </div>
-            <div class="p-card">
-                <span style="color:#888; font-size:0.7rem; font-weight:900;">REVERSE (5' → 3') | {{ primer_results.r_tm }}°C</span>
-                <div class="p-seq">{{ primer_results.r_primer }}</div>
-            </div>
+            <div class="p-card"><span style="color:#888; font-size:0.7rem; font-weight:900;">FORWARD (5' → 3') | {{ primer_results.f_tm }}°C</span><div class="p-seq">{{ primer_results.f_primer }}</div></div>
+            <div class="p-card"><span style="color:#888; font-size:0.7rem; font-weight:900;">REVERSE (5' → 3') | {{ primer_results.r_tm }}°C</span><div class="p-seq">{{ primer_results.r_primer }}</div></div>
         </div>
         {% endif %}
     </div>

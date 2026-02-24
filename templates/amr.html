@@ -13,7 +13,22 @@
         .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--amr); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
         .btn-back:hover { background: var(--amr); color: white; }
         h1 { font-size: 2.5rem; color: var(--amr); margin: 0 0 25px 0; }
-        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; }
+        
+        textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; 
+            font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box;
+            transition: all 0.4s ease; outline: none; background: var(--card); color: var(--text);
+        }
+        textarea:hover, textarea:focus { border-color: var(--amr); box-shadow: 0 0 15px rgba(255, 71, 87, 0.3); transform: translateY(-2px); }
+
+        .btn-screen {
+            width: 100%; padding: 18px; border-radius: 12px; 
+            background: transparent; color: var(--amr); 
+            border: 3px solid var(--amr); font-weight: 900; 
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-screen:hover { background: var(--amr); color: white; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); }
+
         .alert-box { margin-top: 25px; padding: 25px; border-radius: 18px; border: 3px solid var(--amr); background: rgba(255,71,87,0.1); font-size: 1.2rem; text-align: center; font-weight: 900; color: var(--amr); }
     </style>
 </head>
@@ -21,7 +36,10 @@
     <a href="/" class="btn-back">RETURN TO HUB</a>
     <div class="glass-panel">
         <h1>AMR SCOUT</h1>
-        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQ..."></textarea><button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--amr); border:none; color:white; font-weight:900; cursor:pointer;">SCREEN SEQUENCE</button></form>
+        <form method="POST">
+            <textarea name="sequence" rows="4" placeholder="PASTE SEQ..."></textarea>
+            <button type="submit" class="btn-screen">SCREEN SEQUENCE</button>
+        </form>
         {% if amr_results %}<div class="alert-box">{{ amr_results }}</div>{% endif %}
     </div>
     <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
