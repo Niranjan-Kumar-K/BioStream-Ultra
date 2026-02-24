@@ -6,49 +6,45 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --primer: #4facfe; --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
-        [data-theme="dark"] { --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
+        :root { --primer: #4facfe; --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
         body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; color: var(--text); transition: 0.5s; font-weight: 900; }
-        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 850px; margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 850px; margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
         .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primer); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
         .btn-back:hover { background: var(--primer); color: white; }
         h1 { font-size: 2.5rem; color: var(--primer); margin: 0 0 25px 0; }
-        
-        textarea { 
-            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; 
-            font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box;
-            transition: all 0.4s ease; outline: none; background: var(--card); color: var(--text);
-        }
-        textarea:hover, textarea:focus { border-color: var(--primer); box-shadow: 0 0 15px rgba(79, 172, 254, 0.3); transform: translateY(-2px); }
-
-        .btn-design {
-            width: 100%; padding: 18px; border-radius: 12px; 
-            background: transparent; color: var(--primer); 
-            border: 3px solid var(--primer); font-weight: 900; 
-            cursor: pointer; transition: all 0.3s ease;
-        }
-        .btn-design:hover { background: var(--primer); color: white; box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
-
+        .section-box { margin-bottom: 30px; padding: 20px; border-radius: 18px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.1); }
+        input, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #444; font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; background: rgba(0,0,0,0.2); color: white; outline: none; }
+        input:focus, textarea:focus { border-color: var(--primer); box-shadow: 0 0 15px rgba(79, 172, 254, 0.3); }
+        .btn-ghost { width: 100%; padding: 18px; border-radius: 12px; background: transparent; color: var(--primer); border: 3px solid var(--primer); font-weight: 900; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-ghost:hover { background: var(--primer); color: white; box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
         .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .p-card { background: rgba(79,172,254,0.1); padding: 20px; border-radius: 18px; border-left: 6px solid var(--primer); }
-        .p-seq { word-break: break-all; font-size: 1rem; color: var(--text); font-weight: 900; margin-top: 5px; }
+        .p-seq { word-break: break-all; font-size: 1rem; color: var(--primer); margin-top: 10px; }
     </style>
 </head>
 <body>
-    <a href="/" class="btn-back">RETURN TO HUB</a>
+    <a href="/" class="btn-back">← HUB</a>
     <div class="glass-panel">
         <h1>PRIMER LAB</h1>
+        <div class="section-box">
+            <span style="color: var(--primer); font-size: 0.7rem; text-transform: uppercase;">GenBank Remote Fetch</span>
+            <form method="POST" style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="hidden" name="action" value="fetch">
+                <input type="text" name="accession_id" placeholder="Accession ID (e.g., NM_000518)" style="margin-bottom:0;">
+                <button type="submit" class="btn-ghost" style="width: auto; padding: 0 30px;">FETCH</button>
+            </form>
+        </div>
         <form method="POST">
-            <textarea name="sequence" rows="4" placeholder="INPUT STRAND..."></textarea>
-            <button type="submit" class="btn-design">DESIGN PRIMERS</button>
+            <input type="hidden" name="action" value="analyze">
+            <textarea name="sequence" rows="4" placeholder="INPUT STRAND...">{{ input_seq }}</textarea>
+            <button type="submit" class="btn-ghost">DESIGN PRIMERS</button>
         </form>
         {% if primer_results %}
         <div class="p-grid">
-            <div class="p-card"><span style="color:#888; font-size:0.7rem; font-weight:900;">FORWARD (5' → 3') | {{ primer_results.f_tm }}°C</span><div class="p-seq">{{ primer_results.f_primer }}</div></div>
-            <div class="p-card"><span style="color:#888; font-size:0.7rem; font-weight:900;">REVERSE (5' → 3') | {{ primer_results.r_tm }}°C</span><div class="p-seq">{{ primer_results.r_primer }}</div></div>
+            <div class="p-card"><span style="color:#888; font-size:0.7rem;">FORWARD (5' → 3')</span><div class="p-seq">{{ primer_results.f_primer }}</div></div>
+            <div class="p-card"><span style="color:#888; font-size:0.7rem;">REVERSE (5' → 3')</span><div class="p-seq">{{ primer_results.r_primer }}</div></div>
         </div>
         {% endif %}
     </div>
-    <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
 </body>
 </html>

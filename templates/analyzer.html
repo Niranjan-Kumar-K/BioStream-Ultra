@@ -6,58 +6,100 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #00ff88; --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
-        [data-theme="dark"] { --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
+        :root { --primary: #00ff88; --accent: #4facfe; --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
+        [data-theme="light"] { --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
+        
         body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; color: var(--text); transition: 0.5s; font-weight: 900; }
-        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 850px; margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 850px; margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+        
         .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primary); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
-        .btn-back:hover { background: var(--primary); color: white; }
+        .btn-back:hover { background: var(--primary); color: #1e293b; }
+        
         h1 { font-size: 2.5rem; background: linear-gradient(to bottom, #00ff88, #00ad5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 25px 0; }
         
-        textarea { 
-            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; 
+        .section-box { margin-bottom: 30px; padding: 20px; border-radius: 18px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.1); }
+        
+        input, textarea { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #444; 
             font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box;
-            transition: all 0.4s ease; outline: none; background: var(--card); color: var(--text);
+            transition: all 0.4s ease; outline: none; background: rgba(0,0,0,0.2); color: white;
         }
-        textarea:hover, textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); transform: translateY(-2px); }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); transform: translateY(-2px); }
 
-        /* THE FILL-EFFECT BUTTON */
-        .btn-execute {
-            width: 100%; padding: 18px; border-radius: 12px; 
-            background: transparent; color: var(--primary); 
-            border: 3px solid var(--primary); font-weight: 900; 
-            cursor: pointer; transition: all 0.3s ease;
+        .btn-ghost { 
+            width: 100%; padding: 18px; border-radius: 12px; background: transparent; 
+            color: var(--primary); border: 3px solid var(--primary); font-weight: 900; 
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
         }
-        .btn-execute:hover { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4); }
+        .btn-ghost:hover { background: var(--primary); color: #1e293b; box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4); }
+        
+        .btn-blast { color: var(--accent); border-color: var(--accent); }
+        .btn-blast:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
 
         .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
         .stat-card { background: rgba(0,255,136,0.1); padding: 20px; border-radius: 18px; border-bottom: 5px solid var(--primary); }
         .stat-label { color: #888; font-size: 0.7rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
         .stat-value { font-size: 1.1rem; color: var(--primary); }
-        .code-display { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; word-break: break-all; margin-top: 10px; border: 1px solid #ddd; font-size: 0.9rem; }
+        .code-display { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; word-break: break-all; margin-top: 10px; border: 1px solid #444; font-size: 0.9rem; color: #00ff88; }
     </style>
 </head>
 <body>
-    <a href="/" class="btn-back">RETURN TO HUB</a>
+    <a href="/" class="btn-back">← HUB</a>
+    
     <div class="glass-panel">
         <h1>DNA ANALYZER</h1>
+
+        <div class="section-box">
+            <span class="stat-label" style="color: var(--accent);">GenBank Satellite Fetch</span>
+            <form method="POST" style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="hidden" name="action" value="fetch">
+                <input type="text" name="accession_id" placeholder="Accession ID (e.g., M65135)" style="margin-bottom:0;">
+                <button type="submit" class="btn-ghost" style="width: auto; padding: 0 30px; border-color: var(--accent); color: var(--accent);">FETCH</button>
+            </form>
+        </div>
+
         <form method="POST">
-            <textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea>
-            <button type="submit" class="btn-execute">EXECUTE ANALYSIS</button>
+            <input type="hidden" name="action" value="analyze">
+            <textarea name="sequence" rows="5" placeholder="SEQUENCE AUTO-FILLS HERE OR PASTE MANUALLY...">{{ input_seq }}</textarea>
+            <button type="submit" class="btn-ghost">EXECUTE ANALYSIS</button>
         </form>
+
         {% if results %}
         <div class="results-grid">
             <div class="stat-card"><span class="stat-label">Length</span><div class="stat-value">{{ results.length }} BP</div></div>
             <div class="stat-card"><span class="stat-label">DNA Mass</span><div class="stat-value">{{ results.dna_mass }}</div></div>
-            <div class="stat-card"><span class="stat-label">Protein Mass</span><div class="stat-value">{{ results.protein_mass }}</div></div>
-            <div class="stat-card"><span class="stat-label">Restriction Sites & Locations</span><div class="stat-value">{{ results.restriction }}</div></div>
-            <div class="stat-card" style="grid-column: span 2;"><span class="stat-label">Origin of Replication (ORI)</span><div class="stat-value">{{ results.ori }}</div></div>
+            <div class="stat-card"><span class="stat-label">Prot. Mass</span><div class="stat-value">{{ results.protein_mass }}</div></div>
+            <div class="stat-card"><span class="stat-label">Restriction Sites</span><div class="stat-value">{{ results.restriction }}</div></div>
+            <div class="stat-card" style="grid-column: span 2;"><span class="stat-label">Replication (ORI)</span><div class="stat-value">{{ results.ori }}</div></div>
         </div>
+
+        <div style="margin-top:20px; padding:20px; border-radius:18px; border: 2px solid var(--accent); background: rgba(79,172,254,0.05);">
+            <span class="stat-label" style="color: var(--accent);">NCBI Species Identification (BLAST)</span>
+            <form method="POST" style="margin-top:10px;">
+                <input type="hidden" name="action" value="blast">
+                <input type="hidden" name="sequence" value="{{ input_seq }}">
+                {% if results.blast_match %}
+                    <div class="stat-value" style="color: var(--accent); font-size: 1rem;">🧬 MATCH: {{ results.blast_match }}</div>
+                {% else %}
+                    <button type="submit" class="btn-ghost btn-blast">RUN BLAST SEARCH</button>
+                    <p style="font-size: 0.6rem; color: #888; margin-top: 5px;">*Note: This pings NCBI servers and takes 20-40 seconds.</p>
+                {% endif %}
+            </form>
+        </div>
+
         <div style="margin-top:20px; padding:20px; border-radius:18px; border: 2px solid var(--primary);">
-            <span class="stat-label">3-Letter Translation</span><div class="code-display">{{ results.translation }}</div>
+            <span class="stat-label">3-Letter Protein Translation</span>
+            <div class="code-display">{{ results.translation }}</div>
         </div>
         {% endif %}
     </div>
-    <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || !localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
 </body>
 </html>
