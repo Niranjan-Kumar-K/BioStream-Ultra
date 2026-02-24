@@ -8,32 +8,31 @@
         :root { --primary: #00ff88; --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
         [data-theme="dark"] { --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
         body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; color: var(--text); transition: 0.5s; font-weight: 900; }
-        .glass-panel { background: var(--card); padding: 50px; border-radius: 30px; max-width: 900px; margin: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-        .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primary); padding: 12px 25px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 30px; }
+        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 850px; margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .btn-back { text-decoration: none; color: var(--text); border: 3px solid var(--primary); padding: 10px 20px; border-radius: 50px; transition: 0.3s; display: inline-block; margin-bottom: 25px; font-size: 0.8rem; }
         .btn-back:hover { background: var(--primary); color: white; }
-        h1 { font-size: 3rem; background: linear-gradient(to bottom, #00ff88, #00ad5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
-        textarea { width: 100%; padding: 20px; border-radius: 15px; border: 2px solid #ddd; font-family: 'Inter'; font-weight: 900; font-size: 1rem; margin-bottom: 20px; }
-        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .stat-card { background: rgba(0,255,136,0.1); padding: 25px; border-radius: 20px; border-bottom: 5px solid var(--primary); }
-        .stat-label { color: #888; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .stat-value { font-size: 1.4rem; color: var(--primary); }
-        .code-display { background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; word-break: break-all; margin-top: 10px; border: 1px solid #ddd; }
+        h1 { font-size: 2.5rem; background: linear-gradient(to bottom, #00ff88, #00ad5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 25px 0; }
+        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; }
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
+        .stat-card { background: rgba(0,255,136,0.1); padding: 20px; border-radius: 18px; border-bottom: 5px solid var(--primary); }
+        .stat-label { color: #888; font-size: 0.7rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .stat-value { font-size: 1.2rem; color: var(--primary); }
+        .code-display { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; word-break: break-all; margin-top: 10px; border: 1px solid #ddd; font-size: 1rem; }
     </style>
 </head>
 <body>
     <a href="/" class="btn-back">RETURN TO HUB</a>
     <div class="glass-panel">
         <h1>DNA ANALYZER</h1>
-        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea><button type="submit" style="width:100%; padding:20px; border-radius:15px; background:var(--primary); border:none; color:white; font-weight:900; font-size:1.1rem; cursor:pointer;">EXECUTE ANALYSIS</button></form>
+        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea><button type="submit" style="width:100%; padding:18px; border-radius:12px; background:var(--primary); border:none; color:white; font-weight:900; cursor:pointer;">EXECUTE ANALYSIS</button></form>
         {% if results %}
-        <div class="results-grid" style="margin-top:30px;">
-            <div class="stat-card"><span class="stat-label">Sequence Length</span><div class="stat-value">**{{ results.length }} BP**</div></div>
-            <div class="stat-card"><span class="stat-label">DNA Molecular Mass</span><div class="stat-value">**{{ results.dna_mass }}**</div></div>
-            <div class="stat-card"><span class="stat-label">Protein Molecular Mass</span><div class="stat-value">**{{ results.protein_mass }}**</div></div>
+        <div class="results-grid">
+            <div class="stat-card"><span class="stat-label">Length</span><div class="stat-value">{{ results.length }} BP</div></div>
+            <div class="stat-card"><span class="stat-label">DNA Mass</span><div class="stat-value">{{ results.dna_mass }}</div></div>
+            <div class="stat-card"><span class="stat-label">Protein Mass</span><div class="stat-value">{{ results.protein_mass }}</div></div>
         </div>
-        <div style="margin-top:20px; padding:25px; background:var(--card); border-radius:20px; border: 2px solid var(--primary);">
-            <span class="stat-label">3-Letter Translation</span>
-            <div class="code-display">**{{ results.translation }}**</div>
+        <div style="margin-top:20px; padding:20px; border-radius:18px; border: 2px solid var(--primary);">
+            <span class="stat-label">3-Letter Translation</span><div class="code-display">{{ results.translation }}</div>
         </div>
         {% endif %}
     </div>

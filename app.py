@@ -29,8 +29,7 @@ def analyzer():
                 "length": len(seq_obj),
                 "dna_mass": f"{molecular_weight(seq_obj, 'DNA'):.2f} Da",
                 "protein_mass": prot_mass,
-                "translation": get_3_letter_protein(str(protein_seq)),
-                "restriction_sites": ["EcoRI (G*AATTC)", "BamHI (G*GATCC)"]
+                "translation": get_3_letter_protein(str(protein_seq))
             }
     return render_template('analyzer.html', results=results)
 
