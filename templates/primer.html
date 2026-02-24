@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioStream | Primer Lab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --lab-blue: #00d2ff; --dark: #0b0e14; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .nav { width: 100%; max-width: 800px; margin-bottom: 20px; }
+        .nav a { color: #888; text-decoration: none; }
+        .container { background: rgba(0, 210, 255, 0.05); padding: 2rem; border-radius: 20px; border: 1px solid rgba(0, 210, 255, 0.2); width: 100%; max-width: 800px; box-sizing: border-box; }
+        h1 { color: var(--lab-blue); text-align: center; }
+        .btn-primer { background: var(--lab-blue); border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; color: #0b0e14; cursor: pointer; }
+        .primer-results { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .p-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border-top: 3px solid var(--lab-blue); }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="/"><i class="fas fa-arrow-left"></i> BACK TO HUB</a></div>
+    <div class="container">
+        <h1><i class="fas fa-vial"></i> PRIMER LAB</h1>
+        <p style="text-align: center; color: #aaa;">Generate high-quality PCR primers with $T_m$ calculation.</p>
+        <form action="/primer" method="POST">
+            <textarea style="width:100%; background:#000; color:var(--lab-blue); border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px;" name="sequence" rows="5" placeholder="Paste Target DNA Sequence..."></textarea>
+            <button type="submit" class="btn-primer">DESIGN PRIMERS</button>
+        </form>
+        {% if primer_results %}
+        <div class="primer-results">
+            <div class="p-card"><strong>Forward Primer:</strong><br><code style="color:var(--lab-blue);">{{ primer_results.f_primer }}</code></div>
+            <div class="p-card"><strong>Reverse Primer:</strong><br><code style="color:var(--lab-blue);">{{ primer_results.r_primer }}</code></div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

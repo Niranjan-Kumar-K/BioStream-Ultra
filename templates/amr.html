@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioStream | AMR Scout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --danger: #ff4b2b; --warning: #ffb75e; --dark: #0b0e14; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .nav { width: 100%; max-width: 800px; margin-bottom: 20px; }
+        .nav a { color: #888; text-decoration: none; }
+        .container { background: rgba(255, 75, 43, 0.05); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 75, 43, 0.2); width: 100%; max-width: 800px; box-sizing: border-box; }
+        h1 { color: var(--danger); text-align: center; }
+        textarea { width: 100%; padding: 15px; border-radius: 10px; background: #000; color: var(--warning); border: 1px solid #444; margin-bottom: 15px; box-sizing: border-box; font-family: monospace; }
+        .btn-amr { background: linear-gradient(to right, #ff4b2b, #ff0000); border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; color: white; cursor: pointer; }
+        .alert-box { background: rgba(255, 0, 0, 0.2); padding: 20px; border-radius: 10px; border: 1px solid var(--danger); margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="/"><i class="fas fa-arrow-left"></i> BACK TO HUB</a></div>
+    <div class="container">
+        <h1><i class="fas fa-shield-virus"></i> AMR SCOUT</h1>
+        <p style="text-align: center; color: #aaa;">Scan bacterial DNA for antibiotic resistance genes (AMR).</p>
+        <form action="/amr" method="POST">
+            <textarea name="sequence" rows="8" placeholder="Paste Bacterial DNA Sequence..."></textarea>
+            <button type="submit" class="btn-amr">SCAN FOR RESISTANCE</button>
+        </form>
+        {% if amr_results %}
+        <div class="alert-box">
+            <h3><i class="fas fa-exclamation-triangle"></i> Analysis Complete</h3>
+            <p>{{ amr_results }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

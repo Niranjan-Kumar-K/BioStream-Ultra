@@ -3,81 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="google-site-verification" content="googleef6af1ecd1562b9e" />
-
-    <title>BioStream Ultra | DNA Analysis Pro</title>
-    <meta name="title" content="BioStream Ultra | DNA Analysis Pro">
-    <meta name="description" content="A powerful, real-time bioinformatics tool for DNA sequence analysis, GC content calculation, and protein translation.">
-    <meta name="keywords" content="DNA, Bioinformatics, Genetic Analysis, Protein Translation, GC Content, Biology Tool, BioStream">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://biostream-ultra.onrender.com/">
-    <meta property="og:title" content="BioStream Ultra | DNA Analysis Engine">
-    <meta property="og:description" content="Instant DNA to Protein translation and sequence metrics.">
-    <meta property="og:image" content="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/png/dna.png">
-
+    <title>BioStream Ultra | Suite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00f2fe; --secondary: #4facfe; }
+        :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #0b0e14; }
         body { 
-            background: #0b0e14; color: white; font-family: 'Segoe UI', sans-serif;
-            margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif;
+            margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
         }
-        .container { 
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
-            padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 90%; max-width: 800px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 3rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; width: 90%; max-width: 1000px; 
         }
-        h1 { text-align: center; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
-        .subtitle { text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 20px; }
-        textarea { 
-            width: 100%; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.3);
-            color: var(--primary); border: 1px solid #333; font-family: monospace; resize: vertical; box-sizing: border-box;
+        .card { 
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px; border-radius: 20px; text-align: center; cursor: pointer;
+            transition: 0.3s; text-decoration: none; color: white;
         }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        button { 
-            flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s;
+        .card:hover { 
+            transform: translateY(-10px); background: rgba(255, 255, 255, 0.1); 
+            border-color: var(--primary); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
         }
-        .btn-analyze { background: linear-gradient(to right, var(--primary), var(--secondary)); color: #0b0e14; }
-        .btn-clear { background: #333; color: white; }
-        button:hover { opacity: 0.8; transform: translateY(-2px); }
-        .results { margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary); }
-        .scroll-box { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.8rem; color: #0f0; margin-top: 5px; }
-        footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #555; }
+        .card i { font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
+        .card h2 { margin: 10px 0; }
+        .card p { color: #888; font-size: 0.9rem; }
+        .badge { background: var(--primary); color: var(--dark); font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1><i class="fas fa-dna"></i> BioStream Ultra</h1>
-        <div class="subtitle">Advanced Cloud-Based Sequence Processor</div>
-        
-        <form method="POST">
-            <textarea name="sequence" rows="6" maxlength="50000" placeholder="Paste DNA/RNA sequence here (Max 50,000 bp)..." required></textarea>
-            <div class="btn-group">
-                <button type="submit" class="btn-analyze">ANALYZE SEQUENCE</button>
-                <button type="button" class="btn-clear" onclick="document.querySelector('textarea').value=''">CLEAR</button>
-            </div>
-        </form>
+    <div class="header">
+        <h1>BIOSTREAM <span style="font-weight: 300;">ULTRA</span></h1>
+        <p>Select a specialized bioinformatics module to begin.</p>
+    </div>
 
-        {% if results %}
-        <div class="results">
-            <div class="card"><strong>Length:</strong> {{ results.length }} bp</div>
-            <div class="card"><strong>GC Content:</strong> {{ results.gc_content }}%</div>
-            <div class="card"><strong>Protein Weight:</strong> {{ results.mol_weight }} kDa</div>
-            <div class="card" style="grid-column: 1 / -1;">
-                <strong>Protein Translation (to stop):</strong>
-                <div class="scroll-box">{{ results.translation }}</div>
-            </div>
-            <div class="card" style="grid-column: 1 / -1;">
-                <strong>ORF Start Sites (ATG):</strong>
-                <div class="scroll-box">{% if results.orfs %}{{ results.orfs|join(', ') }}{% else %}None found{% endif %}</div>
-            </div>
-        </div>
-        {% endif %}
-        
-        <footer>Optimized for Genomic Research & Analysis</footer>
+    <div class="grid">
+        <a href="/analyzer" class="card">
+            <i class="fas fa-microscope"></i>
+            <h2>DNA Streamline</h2>
+            <p>Sequence analysis, GC content, and Protein translation.</p>
+            <span class="badge">ACTIVE</span>
+        </a>
+
+        <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
+            <i class="fas fa-shield-virus"></i>
+            <h2>AMR Scout</h2>
+            <p>Anti-Microbial Resistance gene detection & mapping.</p>
+            <span class="badge" style="background: #555;">COMING SOON</span>
+        </a>
+
+        <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
+            <i class="fas fa-search-dna"></i>
+            <h2>NCBI BLAST</h2>
+            <p>Compare sequences against global genomic databases.</p>
+            <span class="badge" style="background: #555;">UPGRADE</span>
+        </a>
     </div>
 </body>
 </html>

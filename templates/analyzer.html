@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioStream Ultra | DNA Streamline</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #0b0e14; }
+        body { 
+            background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        }
+        
+        /* New Navigation Bar */
+        .nav-bar {
+            width: 100%; max-width: 800px; display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 30px; padding: 10px;
+        }
+        .btn-back { 
+            text-decoration: none; color: #888; font-size: 0.9rem; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-back:hover { color: var(--primary); }
+
+        .container { 
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 95%; max-width: 800px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        h1 { text-align: center; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .subtitle { text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 25px; letter-spacing: 2px; }
+        
+        textarea { 
+            width: 100%; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.3);
+            color: var(--primary); border: 1px solid #333; font-family: monospace; resize: vertical; box-sizing: border-box;
+        }
+        .upload-zone {
+            margin-top: 15px; padding: 15px; border: 1px dashed #444; border-radius: 10px; text-align: center;
+            transition: 0.3s;
+        }
+        .upload-zone:hover { border-color: var(--primary); background: rgba(0, 242, 254, 0.05); }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-analyze { background: linear-gradient(to right, var(--primary), var(--secondary)); color: #0b0e14; }
+        .btn-clear { background: #222; color: white; }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .results { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .card { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border-left: 3px solid var(--primary); }
+        .scroll-box { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.8rem; color: #0f0; margin-top: 8px; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> BACK TO HUB</a>
+        <div style="font-size: 0.7rem; color: var(--primary); font-weight: bold; letter-spacing: 1px;">MODULE: DNA STREAMLINE</div>
+    </div>
+
+    <div class="container">
+        <h1><i class="fas fa-microscope"></i> ANALYZER</h1>
+        <div class="subtitle">SEQUENCE METRICS & TRANSLATION</div>
+        
+        <form action="/analyzer" method="POST" enctype="multipart/form-data">
+            <textarea name="sequence" rows="5" placeholder="Paste DNA Sequence (FASTA supported)..."></textarea>
+            
+            <div class="upload-zone">
+                <i class="fas fa-cloud-upload-alt" style="color: #666; margin-bottom: 8px;"></i><br>
+                <input type="file" name="fasta_file" accept=".fasta,.fa,.txt">
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn-analyze">PROCESS DATA</button>
+                <button type="button" class="btn-clear" onclick="window.location.href='/analyzer'">RESET</button>
+            </div>
+        </form>
+
+        {% if results %}
+        <div class="results">
+            <div class="card"><strong>Length:</strong><br>{{ results.length }} bp</div>
+            <div class="card"><strong>GC Content:</strong><br>{{ results.gc_content }}%</div>
+            <div class="card"><strong>ORF Count:</strong><br>{{ results.orfs|length }} found</div>
+            <div class="card" style="grid-column: 1 / -1;">
+                <strong>Protein Translation:</strong>
+                <div class="scroll-box">{{ results.translation }}</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
