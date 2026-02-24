@@ -6,7 +6,6 @@ from Bio.Data import IUPACData
 
 app = Flask(__name__)
 
-# Utility for 3-letter protein codes
 def get_3_letter_protein(one_letter_seq):
     if not one_letter_seq: return "None"
     return "-".join([IUPACData.protein_letters_1to3.get(aa, aa).capitalize() for aa in one_letter_seq])
@@ -26,7 +25,6 @@ def analyzer():
             prot_mass = "0.00 Da"
             if len(protein_seq) > 0:
                 prot_mass = f"{ProteinAnalysis(str(protein_seq)).molecular_weight():.2f} Da"
-            
             results = {
                 "length": len(seq_obj),
                 "dna_mass": f"{molecular_weight(seq_obj, 'DNA'):.2f} Da",
@@ -41,7 +39,6 @@ def amr():
     amr_results = None
     if request.method == 'POST':
         seq = request.form.get('sequence', '').strip().upper()
-        # Marker Database
         db = {"TGGTATGTGGAAGTTAGATTG": "mecA (Methicillin Resistance)", "TTCGGCATTTCGTC": "vanA (Vancomycin Resistance)"}
         amr_results = next((desc for marker, desc in db.items() if marker in seq), "No known markers found.")
     return render_template('amr.html', amr_results=amr_results)
@@ -55,7 +52,7 @@ def primer():
             f_seq = seq[:20]
             r_seq = str(Seq(seq[-20:]).reverse_complement())
             primer_results = {
-                "f_primer": f_seq, "f_tm": f"{molecular_weight(Seq(f_seq), 'DNA')/60:.1f}", # Simple Tm proxy
+                "f_primer": f_seq, "f_tm": f"{molecular_weight(Seq(f_seq), 'DNA')/60:.1f}",
                 "r_primer": r_seq, "r_tm": f"{molecular_weight(Seq(r_seq), 'DNA')/60:.1f}"
             }
     return render_template('primer.html', primer_results=primer_results)

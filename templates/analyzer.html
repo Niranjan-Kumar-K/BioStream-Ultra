@@ -3,56 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>BioStream | Analyzer</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-green: #00ff88; --deep-green: #00ad5e; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        .btn-back { display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; border: 1px solid #ddd; margin-bottom: 20px; transition: 0.3s; }
-        .btn-back:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3); }
-        
-        .glass-panel { background: rgba(255,255,255,0.9); padding: 40px; border-radius: 25px; width: 100%; max-width: 850px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        h1, .stat-value { font-weight: 900; background: linear-gradient(to bottom, var(--primary-green), var(--deep-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #eee; font-family: 'Inter'; font-weight: 900; box-sizing: border-box; }
-        
-        .btn-exec { width:100%; padding:18px; margin-top:10px; border-radius:12px; background: white; border: 2px solid var(--primary-green); color: var(--deep-green); font-weight:900; cursor:pointer; transition: 0.3s; }
-        .btn-exec:hover { background: var(--primary-green); color: white; box-shadow: 0 0 20px rgba(0,255,136,0.4); }
-        
-        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary-green); animation: fadeInUp 0.5s ease forwards; }
-        .stat-card small { color: #888; font-weight: 900; letter-spacing: 1px; }
-        .code-block { background: #f8f9fa; padding: 12px; border-radius: 10px; word-break: break-all; font-weight: 900; border: 1px solid #eee; color: #333; margin-top: 5px; }
+        :root { --primary: #00ff88; --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); --card: white; --text: #333; }
+        [data-theme="dark"] { --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); --card: #1e293b; --text: #f8fafc; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; color: var(--text); transition: 0.5s; }
+        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 800px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .btn-back { text-decoration: none; color: var(--text); font-weight: 900; border: 2px solid var(--primary); padding: 10px 20px; border-radius: 50px; transition: 0.3s; }
+        .btn-back:hover { background: var(--primary); color: white; }
+        h1 { font-weight: 900; background: linear-gradient(to bottom, #00ff88, #00ad5e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        textarea { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #ddd; margin: 20px 0; box-sizing: border-box; font-family: 'Inter'; font-weight: 900; }
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-card { background: rgba(0,255,136,0.1); padding: 15px; border-radius: 15px; border-bottom: 4px solid var(--primary); }
     </style>
 </head>
 <body>
-    <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> RETURN TO HUB</a>
+    <a href="/" class="btn-back">← HUB</a><br><br>
     <div class="glass-panel">
         <h1>DNA ANALYZER</h1>
-        <form method="POST">
-            <textarea name="sequence" rows="4" placeholder="INPUT SEQUENCE..."></textarea>
-            <button type="submit" class="btn-exec">EXECUTE ANALYSIS</button>
-        </form>
-
+        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE..."></textarea><button type="submit" style="width:100%; padding:15px; border-radius:12px; background:var(--primary); border:none; color:white; font-weight:900; cursor:pointer;">ANALYZE</button></form>
         {% if results %}
-        <div class="results-grid">
-            <div class="stat-card"><small>LENGTH</small><div class="stat-value">{{ results.length }} bp</div></div>
-            <div class="stat-card"><small>DNA MASS</small><div class="stat-value" style="font-size:1.1rem">{{ results.dna_mass }}</div></div>
-            <div class="stat-card"><small>PROTEIN MASS</small><div class="stat-value" style="font-size:1.1rem">{{ results.protein_mass }}</div></div>
-            
-            <div class="stat-card" style="grid-column: span 3;"><small>RESTRICTION MAP</small>
-                <div style="font-weight:900; color:var(--deep-green); margin-top:5px;">
-                    {% for s in results.restriction_sites %}> {{ s }}<br>{% endfor %}
-                </div>
-            </div>
-            
-            <div class="stat-card" style="grid-column: span 3;"><small>TRANSLATION (AMINO ACIDS)</small>
-                <div class="code-block">{{ results.translation if results.translation else "None (No Start Codon)" }}</div>
-            </div>
+        <div class="results-grid" style="margin-top:20px;">
+            <div class="stat-card"><small>LENGTH</small><div>{{ results.length }} bp</div></div>
+            <div class="stat-card"><small>DNA MASS</small><div>{{ results.dna_mass }}</div></div>
+            <div class="stat-card"><small>PROT MASS</small><div>{{ results.protein_mass }}</div></div>
         </div>
+        <div class="stat-card" style="margin-top:15px;"><small>TRANSLATION</small><div style="word-break:break-all;">{{ results.translation }}</div></div>
         {% endif %}
     </div>
+    <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
 </body>
 </html>
