@@ -7,16 +7,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-blue: #4facfe; --deep-blue: #00f2fe; }
+        :root { --primer-blue: #4facfe; --deep-blue: #00f2fe; }
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); font-family: 'Inter', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .btn-back { display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; border: 1px solid #ddd; margin-bottom: 20px; }
+        
+        /* THE FIXED BLUE BACK BUTTON */
+        .btn-back { 
+            display: inline-block; padding: 10px 20px; background: white; border-radius: 30px; 
+            color: #333; text-decoration: none; font-weight: 900; font-size: 0.75rem; 
+            border: 1px solid #ddd; margin-bottom: 20px; transition: 0.3s; 
+        }
+        .btn-back:hover { 
+            background: var(--primer-blue); color: white; border-color: var(--primer-blue);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
         .glass-panel { background: rgba(255,255,255,0.9); padding: 40px; border-radius: 25px; width: 100%; max-width: 850px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        h1 { font-weight: 900; background: linear-gradient(to bottom, var(--primary-blue), var(--deep-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-weight: 900; background: linear-gradient(to bottom, var(--primer-blue), var(--deep-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #eee; font-family: 'Inter'; font-weight: 900; box-sizing: border-box; }
-        .btn-exec { width:100%; padding:18px; margin-top:10px; border-radius:12px; background: white; border: 2px solid var(--primary-blue); color: var(--primary-blue); font-weight:900; cursor:pointer; transition: 0.3s; }
-        /* BLUE HOVER FOR PRIMER */
-        .btn-exec:hover { background: var(--primary-blue); color: white; box-shadow: 0 0 20px rgba(79,172,254,0.4); }
-        .primer-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primary-blue); margin-top: 15px; }
+        
+        .btn-exec { 
+            width:100%; padding:18px; margin-top:10px; border-radius:12px; background: white; 
+            border: 2px solid var(--primer-blue); color: var(--primer-blue); font-weight:900; 
+            cursor:pointer; transition: 0.3s; 
+        }
+        .btn-exec:hover { background: var(--primer-blue); color: white; box-shadow: 0 0 20px rgba(79,172,254,0.4); }
+        .primer-card { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--primer-blue); margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -29,7 +44,7 @@
         </form>
         {% if primer_results %}
         <div class="primer-card">
-            <div style="font-weight:900; color:var(--primary-blue)">FORWARD ({{ primer_results.f_tm }}°C):</div>
+            <div style="font-weight:900; color:var(--primer-blue)">FORWARD ({{ primer_results.f_tm }}°C):</div>
             <div style="word-break:break-all; font-family:monospace; font-weight:900">{{ primer_results.f_primer }}</div>
         </div>
         {% endif %}
