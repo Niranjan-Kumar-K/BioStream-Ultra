@@ -3,166 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>BioStream | AMR Scout</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --amr: #ff4757; 
-            --accent: #4facfe; 
-            --bg: #0f172a; 
-            --card: #1e293b; 
-            --text: #f8fafc; 
+            --danger: #ff4757; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --input-bg: rgba(0,0,0,0.2);
+            --gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
+        .light-theme {
+            --bg: #fff5f5; --card: #ffffff; --text: #1a1a1a; --input-bg: #fee2e2;
+            --gradient: linear-gradient(135deg, #fff5f5 0%, #ffe4e6 100%);
+        }
+        body { background: var(--bg); background-image: var(--gradient); background-attachment: fixed; font-family: 'Inter'; padding: 40px; color: var(--text); font-weight: 900; transition: 0.3s; min-height: 100vh; margin: 0; }
+        .btn-back { text-decoration: none; color: var(--text); border: 3px solid #444; padding: 10px 25px; border-radius: 50px; display: inline-flex; align-items: center; margin-bottom: 25px; font-size: 0.8rem; transition: 0.3s; text-transform: uppercase; }
+        .btn-back:hover { background: var(--text); color: var(--bg); }
+        .glass-panel { background: var(--card); padding: 40px; border-radius: 25px; max-width: 900px; margin: auto; border: 1px solid rgba(255, 71, 87, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .btn-ghost { width: 100%; padding: 18px; border-radius: 12px; border: 3px solid var(--danger); color: var(--danger); background: transparent; cursor: pointer; font-weight: 900; transition: 0.3s; margin-top: 10px; text-transform: uppercase; }
+        .btn-ghost:hover { background: var(--danger) !important; color: white !important; }
         
-        body { 
-            background: var(--bg); 
-            font-family: 'Inter', sans-serif; 
-            padding: 40px; 
-            color: var(--text); 
-            font-weight: 900; 
-        }
-
-        /* --- THE RED GLOW HUB BUTTON --- */
-        .btn-back { 
-            text-decoration: none; 
-            color: var(--amr); 
-            border: 3px solid var(--amr); 
-            padding: 10px 25px; 
-            border-radius: 50px; 
-            display: inline-block; 
-            margin-bottom: 25px; 
-            font-size: 0.8rem;
-            font-weight: 900;
-            transition: all 0.3s ease;
-            background: transparent;
-            text-transform: uppercase;
-        }
-
-        .btn-back:hover { 
-            background: var(--amr); 
-            color: white; 
-            border-color: var(--amr); 
-            box-shadow: 0 0 25px rgba(255, 71, 87, 0.6); 
-            transform: translateY(-2px);
-        }
-
-        .glass-panel { 
-            background: var(--card); 
-            padding: 40px; 
-            border-radius: 25px; 
-            max-width: 850px; 
-            margin: auto; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1); 
-        }
-
-        h1 { font-size: 2.5rem; color: var(--amr); margin: 0 0 25px 0; letter-spacing: -1px; }
-
-        .section-box { 
-            margin-bottom: 30px; 
-            padding: 20px; 
-            border-radius: 18px; 
-            border: 1px dashed rgba(255,255,255,0.2); 
-            background: rgba(0,0,0,0.1); 
-        }
-
-        input, textarea { 
-            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #444; 
-            font-family: 'Inter'; font-weight: 900; margin-bottom: 15px; box-sizing: border-box; 
-            background: rgba(0,0,0,0.2); color: white; outline: none; transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--amr); box-shadow: 0 0 15px rgba(255, 71, 87, 0.2); }
-
-        .btn-ghost { 
-            width: 100%; padding: 18px; border-radius: 12px; background: transparent; 
-            color: var(--amr); border: 3px solid var(--amr); font-weight: 900; 
-            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
-        }
-        .btn-ghost:hover { 
-            background: var(--amr); 
-            color: white; 
-            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); 
-        }
-
-        /* --- RESULT CARDS --- */
-        .hit-card { 
-            margin-top: 20px; 
-            padding: 25px; 
-            border-radius: 18px; 
-            background: rgba(255, 71, 87, 0.1); 
-            border-left: 6px solid var(--amr);
-            animation: slideIn 0.5s ease;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .tag { 
-            font-size: 0.7rem; 
-            background: var(--amr); 
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-        }
-
-        .highlight-box {
-            background: rgba(0,0,0,0.4);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #ff8888;
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            word-break: break-all;
-        }
-
-        .marker { background: #ffd700; color: black; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
+        /* BOX FIX BUD */
+        input, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid rgba(128,128,128,0.3); background: var(--input-bg); color: var(--text); margin-bottom: 10px; box-sizing: border-box; font-family: 'Inter'; font-weight: 900; outline: none; resize: none; }
+        
+        .amr-card { background: var(--input-bg); padding: 25px; border-radius: 15px; border-left: 5px solid var(--danger); display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .gene-name { color: var(--danger); font-size: 1.5rem; }
+        .scroll-box { max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; color: var(--danger); margin-top: 10px; }
     </style>
 </head>
 <body>
-    <a href="/" class="btn-back">← HUB</a>
-    
+    <a href="/" class="btn-back">HUB</a>
     <div class="glass-panel">
-        <h1>AMR SCOUT</h1>
-
-        <div class="section-box">
-            <span style="color: var(--accent); font-size: 0.7rem; text-transform: uppercase;">NCBI Satellite Fetch (Auto-Annotation)</span>
-            <form method="POST" style="display: flex; gap: 10px; margin-top: 10px;">
-                <input type="hidden" name="action" value="fetch">
-                <input type="text" name="accession_id" placeholder="Accession ID (e.g., NG_047938)" style="margin-bottom:0;">
-                <button type="submit" class="btn-ghost" style="width: auto; padding: 0 30px; border-color: var(--accent); color: var(--accent);">FETCH</button>
-            </form>
-        </div>
-
-        <form method="POST">
-            <input type="hidden" name="action" value="analyze">
-            <textarea name="sequence" rows="4" placeholder="SEQUENCE AUTO-FILLS OR PASTE RAW DNA...">{{ input_seq }}</textarea>
-            <button type="submit" class="btn-ghost">SCREEN SEQUENCE</button>
+        <h1 style="color: var(--danger); text-align: center; font-size: 2.5rem; margin-top: 0;">AMR SCOUT</h1>
+        <form method="POST" style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="hidden" name="action" value="fetch"><input type="text" name="accession_id" placeholder="NCBI ACCESSION ID">
+            <button type="submit" class="btn-ghost" style="width: auto; padding: 0 30px; margin-top:0;">SCAN</button>
         </form>
-
-        {% if amr_results %}
-            {% for hit in amr_results %}
-                <div class="hit-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1.4rem;">⚠️ {{ hit.name }} DETECTED</span>
-                        <span class="tag">{{ hit.pos }}</span>
-                    </div>
-                    <p style="margin: 10px 0 0 0; font-size: 0.9rem; opacity: 0.8;">Antibiotic Resistance Marker identified via GenBank Annotation.</p>
-                    
-                    <div class="highlight-box">
-                        <span style="color: #888; font-size: 0.7rem;">SEQUENCE START AT LOCUS:</span><br>
-                        <span class="marker">{{ hit.snippet }}</span>
-                    </div>
-                </div>
-            {% endfor %}
-        {% elif input_seq and not amr_results and not input_seq.startswith('ERROR') %}
-            <div class="hit-card" style="border-color: #00ff88; background: rgba(0,255,136,0.1);">
-                <span style="color: #00ff88; font-size: 1.2rem;">✅ NO KNOWN AMR MARKERS FOUND</span>
+        <form method="POST"><textarea name="sequence" rows="4" placeholder="PASTE SEQUENCE">{{ input_seq }}</textarea><button type="submit" class="btn-ghost">EXECUTE SCAN</button></form>
+        {% if amr_results %}{% for result in amr_results %}
+            <div class="amr-card">
+                <div><span class="gene-name">{{ result.gene }}</span><br><small>TYPE: {{ result.type }}</small><div class="scroll-box">{{ result.sequence }}</div></div>
+                <div style="text-align: right;"><span style="color: var(--danger);">LOC: {{ result.location }}</span><br><span>THREAT</span></div>
             </div>
-        {% elif input_seq.startswith('ERROR') %}
-            <div class="hit-card" style="border-color: #ffb300; background: rgba(255,179,0,0.1);">
-                <span style="color: #ffb300; font-size: 1.1rem;">⚠️ {{ input_seq }}</span>
-            </div>
-        {% endif %}
+        {% endfor %}{% endif %}
     </div>
+    <script>
+        function applyTheme() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') document.documentElement.classList.add('light-theme');
+            else document.documentElement.classList.remove('light-theme');
+        }
+        applyTheme();
+        setInterval(applyTheme, 500);
+    </script>
 </body>
 </html>
