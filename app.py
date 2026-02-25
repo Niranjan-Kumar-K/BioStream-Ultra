@@ -33,24 +33,40 @@ def fetch_full_record(accession_id):
     except Exception:
         return "ERROR: Accession ID not found."
 
-# --- 1. ANALYZER (LOCKED) ---
+# --- 1. ANALYZER (BLAST FIXED) ---
 @app.route('/analyzer', methods=['GET', 'POST'])
 def analyzer():
     results = None
     input_seq = ""
     if request.method == 'POST':
         action = request.form.get('action')
+        
+        # Determine Input Sequence first
         if action == 'fetch':
             record = fetch_full_record(request.form.get('accession_id', '').strip())
             input_seq = str(record.seq) if not isinstance(record, str) else record
-        elif action == 'blast':
-            input_seq = clean_seq(request.form.get('sequence', ''))
-            results = {"blast_match": "Searching NCBI..."} 
         else:
             input_seq = clean_seq(request.form.get('sequence', ''))
 
         if input_seq and not input_seq.startswith("ERROR"):
             seq_obj = Seq(input_seq)
+            
+            # --- REAL BLAST LOGIC BUD ---
+            blast_status = "Ready"
+            if action == 'blast':
+                try:
+                    # This call talks to NCBI - it takes time!
+                    result_handle = NCBIWWW.qblast("blastn", "nt", input_seq)
+                    blast_records = NCBIXML.parse(result_handle)
+                    blast_record = next(blast_records)
+                    if blast_record.alignments:
+                        blast_status = blast_record.alignments[0].title[:60] + "..."
+                    else:
+                        blast_status = "No matches found."
+                except:
+                    blast_status = "NCBI Timeout/Error."
+
+            # Calculate remaining stats
             rev_comp = str(seq_obj.reverse_complement())
             gc_cont = f"{(gc_fraction(seq_obj) * 100):.2f}%"
             full_protein = seq_obj.translate()
@@ -58,8 +74,10 @@ def analyzer():
                 clean_prot = str(full_protein).replace('*', '')
                 p_mass = f"{ProteinAnalysis(clean_prot).molecular_weight():.2f}"
             except: p_mass = "0.00"
+            
             enzymes = {"EcoRI": "GAATTC", "BamHI": "GGATCC", "HindIII": "AAGCTT"}
             res_found = [f"{n} (@{input_seq.find(s)+1})" for n, s in enzymes.items() if s in input_seq]
+            
             results = {
                 "length": len(seq_obj),
                 "gc_content": gc_cont,
@@ -69,7 +87,7 @@ def analyzer():
                 "translation": "-".join([IUPACData.protein_letters_1to3.get(aa, "Stp").capitalize() for aa in full_protein]),
                 "restriction": ", ".join(res_found) if res_found else "None Found",
                 "ori": detect_origin(input_seq),
-                "blast_match": results.get("blast_match") if results and "blast_match" in results else "Ready"
+                "blast_match": blast_status
             }
     return render_template('analyzer.html', results=results, input_seq=input_seq)
 
@@ -98,14 +116,14 @@ def amr():
                                 "sequence": str(feature.extract(record.seq))[:50] + "..."
                             })
                 except Exception:
-                    input_seq = "ERROR: Sequence data is undefined."
+                    input_seq = "ERROR: Sequence data undefined."
             else:
                 input_seq = record
         else:
             input_seq = clean_seq(request.form.get('sequence', ''))
     return render_template('amr.html', amr_results=amr_results, input_seq=input_seq)
 
-# --- 3. PRIMER LAB (NEW) ---
+# --- 3. PRIMER LAB (LOCKED) ---
 @app.route('/primer', methods=['GET', 'POST'])
 def primer():
     primer_results = None
@@ -114,15 +132,10 @@ def primer():
         input_seq = clean_seq(request.form.get('sequence', ''))
         if len(input_seq) >= 50:
             seq_obj = Seq(input_seq)
-            
-            # Extract 20bp primers
             fwd_seq = seq_obj[:20]
             rev_seq = seq_obj[-20:].reverse_complement()
-            
-            # TM Calculation (Wallace Rule)
             f_tm = mt.Tm_Wallace(fwd_seq)
             r_tm = mt.Tm_Wallace(rev_seq)
-            
             primer_results = {
                 "fwd_seq": str(fwd_seq),
                 "fwd_tm": f"{f_tm:.1f}°C",
@@ -130,12 +143,10 @@ def primer():
                 "rev_seq": str(rev_seq),
                 "rev_tm": f"{r_tm:.1f}°C",
                 "rev_gc": f"{(gc_fraction(rev_seq)*100):.1f}%",
-                "product_size": len(seq_obj),
                 "status": "OPTIMAL" if 52 <= f_tm <= 65 else "ADVISE CHECK"
             }
         elif input_seq:
             input_seq = "ERROR: Minimum 50bp required."
-            
     return render_template('primer.html', primer_results=primer_results, input_seq=input_seq)
 
 @app.route('/')
