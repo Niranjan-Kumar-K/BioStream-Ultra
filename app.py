@@ -11,7 +11,6 @@ from io import StringIO
 app = Flask(__name__)
 
 # --- NCBI SETUP ---
-# Keep this email valid so NCBI doesn't block your Render IP
 Entrez.email = "niranjankumar270627@gmail.com" 
 
 def clean_seq(data):
@@ -35,7 +34,7 @@ def fetch_full_record(accession_id):
     except Exception:
         return "ERROR: Accession ID not found."
 
-# --- 1. ANALYZER (RENDER-OPTIMIZED BLAST) ---
+# --- 1. ANALYZER (PRO-WEB BLAST) ---
 @app.route('/analyzer', methods=['GET', 'POST'])
 def analyzer():
     results = None
@@ -52,12 +51,14 @@ def analyzer():
         if input_seq and not input_seq.startswith("ERROR"):
             seq_obj = Seq(input_seq)
             
-            # --- BLAST ENGINE FOR CLOUD HOSTING ---
-            blast_status = "Ready"
+            # --- BLAST ENGINE: SPEED OPTIMIZED ---
+            blast_status = "Not Run"
             if action == 'blast':
                 try:
-                    # hitlist_size=1 makes it MUCH faster for Render's timeout limits
-                    result_handle = NCBIWWW.qblast("blastn", "nt", input_seq, hitlist_size=1)
+                    # Using megablast + hitlist_size=1 to avoid 502 Timeouts
+                    result_handle = NCBIWWW.qblast("blastn", "nt", input_seq, 
+                                                   hitlist_size=1, 
+                                                   megablast=True)
                     blast_data = result_handle.read()
                     result_handle.close()
                     
@@ -65,15 +66,16 @@ def analyzer():
                     blast_record = next(blast_records)
                     
                     if blast_record.alignments:
-                        # Grab the specific title of the top match
-                        blast_status = blast_record.alignments[0].title[:100]
+                        # Extracting the cleanest name from the alignment title
+                        top_hit = blast_record.alignments[0].title
+                        blast_status = top_hit.split('|')[-1].strip()[:100]
                     else:
                         blast_status = "No matches found."
                 except Exception as e:
-                    print(f"Render BLAST Error: {e}")
-                    blast_status = "NCBI Timeout. Try a shorter sequence or retry."
+                    print(f"DEBUG: BLAST Failed -> {e}")
+                    blast_status = "NCBI Timeout. Try again or use a shorter sequence."
 
-            # Calculate remaining stats
+            # Stats Calculation
             rev_comp = str(seq_obj.reverse_complement())
             gc_cont = f"{(gc_fraction(seq_obj) * 100):.2f}%"
             full_protein = seq_obj.translate()
@@ -98,7 +100,7 @@ def analyzer():
             }
     return render_template('analyzer.html', results=results, input_seq=input_seq)
 
-# --- 2. AMR SCOUT (LOCKED) ---
+# --- 2. AMR SCOUT ---
 @app.route('/amr', methods=['GET', 'POST'])
 def amr():
     amr_results = []
@@ -127,7 +129,7 @@ def amr():
             input_seq = clean_seq(request.form.get('sequence', ''))
     return render_template('amr.html', amr_results=amr_results, input_seq=input_seq)
 
-# --- 3. PRIMER LAB (LOCKED) ---
+# --- 3. PRIMER LAB ---
 @app.route('/primer', methods=['GET', 'POST'])
 def primer():
     primer_results = None
@@ -158,6 +160,6 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    # Render uses the PORT environment variable
+    # Dynamic port for Render deployment
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
