@@ -6,10 +6,12 @@ from Bio.SeqUtils import molecular_weight, gc_fraction, MeltingTemp as mt
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from Bio.Data import IUPACData
 import os
+from io import StringIO
 
 app = Flask(__name__)
 
 # --- NCBI SETUP ---
+# Keep this email valid so NCBI doesn't block your Render IP
 Entrez.email = "niranjankumar270627@gmail.com" 
 
 def clean_seq(data):
@@ -33,7 +35,7 @@ def fetch_full_record(accession_id):
     except Exception:
         return "ERROR: Accession ID not found."
 
-# --- 1. ANALYZER (BLAST FIXED) ---
+# --- 1. ANALYZER (RENDER-OPTIMIZED BLAST) ---
 @app.route('/analyzer', methods=['GET', 'POST'])
 def analyzer():
     results = None
@@ -41,7 +43,6 @@ def analyzer():
     if request.method == 'POST':
         action = request.form.get('action')
         
-        # Determine Input Sequence first
         if action == 'fetch':
             record = fetch_full_record(request.form.get('accession_id', '').strip())
             input_seq = str(record.seq) if not isinstance(record, str) else record
@@ -51,20 +52,26 @@ def analyzer():
         if input_seq and not input_seq.startswith("ERROR"):
             seq_obj = Seq(input_seq)
             
-            # --- REAL BLAST LOGIC BUD ---
+            # --- BLAST ENGINE FOR CLOUD HOSTING ---
             blast_status = "Ready"
             if action == 'blast':
                 try:
-                    # This call talks to NCBI - it takes time!
-                    result_handle = NCBIWWW.qblast("blastn", "nt", input_seq)
-                    blast_records = NCBIXML.parse(result_handle)
+                    # hitlist_size=1 makes it MUCH faster for Render's timeout limits
+                    result_handle = NCBIWWW.qblast("blastn", "nt", input_seq, hitlist_size=1)
+                    blast_data = result_handle.read()
+                    result_handle.close()
+                    
+                    blast_records = NCBIXML.parse(StringIO(blast_data))
                     blast_record = next(blast_records)
+                    
                     if blast_record.alignments:
-                        blast_status = blast_record.alignments[0].title[:60] + "..."
+                        # Grab the specific title of the top match
+                        blast_status = blast_record.alignments[0].title[:100]
                     else:
                         blast_status = "No matches found."
-                except:
-                    blast_status = "NCBI Timeout/Error."
+                except Exception as e:
+                    print(f"Render BLAST Error: {e}")
+                    blast_status = "NCBI Timeout. Try a shorter sequence or retry."
 
             # Calculate remaining stats
             rev_comp = str(seq_obj.reverse_complement())
@@ -103,22 +110,19 @@ def amr():
             if not isinstance(record, str):
                 try:
                     raw_seq = record.seq
-                    if raw_seq is not None:
-                        input_seq = str(raw_seq)
+                    input_seq = str(raw_seq) if raw_seq else ""
                     for feature in record.features:
                         qualifiers = str(feature.qualifiers).lower()
                         if any(word in qualifiers for word in ["resistance", "beta-lactamase", "antibiotic", "drug"]):
-                            name = feature.qualifiers.get('gene', feature.qualifiers.get('product', ['Unknown AMR Gene']))[0]
+                            name = feature.qualifiers.get('gene', feature.qualifiers.get('product', ['Unknown Gene']))[0]
                             amr_results.append({
                                 "gene": name.upper(),
                                 "type": feature.type,
                                 "location": f"{int(feature.location.start)} - {int(feature.location.end)}",
                                 "sequence": str(feature.extract(record.seq))[:50] + "..."
                             })
-                except Exception:
-                    input_seq = "ERROR: Sequence data undefined."
-            else:
-                input_seq = record
+                except: input_seq = "ERROR: Sequence undefined."
+            else: input_seq = record
         else:
             input_seq = clean_seq(request.form.get('sequence', ''))
     return render_template('amr.html', amr_results=amr_results, input_seq=input_seq)
@@ -154,4 +158,6 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Render uses the PORT environment variable
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
