@@ -65,7 +65,17 @@
 
         .res-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; }
         .res-card { background: var(--input-bg); padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--accent); text-align: center; }
-        .scroll-box { max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; color: var(--accent); text-align: left; line-height: 1.6; }
+        .scroll-box { max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; color: var(--accent); text-align: left; line-height: 1.6; word-break: break-all; }
+        
+        /* New Safety Screen Styling */
+        .funding-screen { 
+            background: rgba(255, 179, 71, 0.1); 
+            border: 2px dashed var(--amber); 
+            padding: 30px; 
+            border-radius: 20px; 
+            text-align: center; 
+            margin-top: 20px; 
+        }
     </style>
 </head>
 <body>
@@ -85,6 +95,16 @@
             <button type="submit" name="action" value="blast" class="btn-ghost btn-blast">NCBI BLAST SEARCH</button>
         </form>
 
+        {% if too_long %}
+        <div class="funding-screen">
+            <h2 style="color: var(--amber); margin-top: 0;">📏 SEQUENCE TOO COMPLEX</h2>
+            <p>This sequence is <strong>{{ input_seq|length }} bp</strong>.</p>
+            <p>To maintain high-speed analysis, the Free Tier is limited to 50,000 bp.</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;"><i>"We need funding to scan these ultimate genomes! lol"</i></p>
+            <a href="/amr" class="btn-ghost btn-blast" style="display:inline-block; width:auto; padding: 10px 20px; text-decoration: none;">USE AMR SCOUT INSTEAD</a>
+        </div>
+        {% endif %}
+
         {% if results %}
         <div class="res-grid">
             <div class="res-card"><span>DNA LENGTH</span><br><span style="color:var(--accent);">{{ results.length }} bp</span></div>
@@ -98,7 +118,6 @@
 
             <div class="res-card"><span>DNA MASS</span><br><span style="color:var(--accent);">{{ results.dna_mass }}</span></div>
             <div class="res-card"><span>PROT MASS</span><br><span style="color:var(--accent);">{{ results.prot_mass }}</span></div>
-            
             <div class="res-card"><span>RESTRICTION MAPPING</span><br><span style="color:var(--accent);">{{ results.restriction }}</span></div>
 
             <div class="res-card" style="grid-column: span 3;">
