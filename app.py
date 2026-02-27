@@ -32,11 +32,14 @@ class AnalysisRecord(db.Model):
 with app.app_context():
     db.create_all()
 
+# Ensure you use your own registered email for NCBI
 Entrez.email = "niranjankumar270627@gmail.com" 
 
+# --- UTILITIES ---
 def clean_seq(data):
     if not data: return ""
     lines = data.splitlines()
+    # Strip FASTA header if present
     clean_data = "".join(lines[1:]) if lines and lines[0].startswith('>') else "".join(lines)
     clean = "".join(clean_data.split()).upper()
     return "".join([char for char in clean if char.isalpha()])
@@ -50,6 +53,7 @@ def detect_origin(seq_str):
 
 def fetch_full_record(accession_id):
     try:
+        # FASTA is lightweight and prevents 500 errors on fetch
         handle = Entrez.efetch(db="nucleotide", id=accession_id, rettype="fasta", retmode="text")
         raw_data = handle.read()
         handle.close()
@@ -58,6 +62,8 @@ def fetch_full_record(accession_id):
         return sequence
     except Exception:
         return "ERROR: Accession ID not found."
+
+# --- ROUTES ---
 
 @app.route('/')
 def index():
@@ -93,44 +99,54 @@ def analyzer():
         if input_seq and not input_seq.startswith("ERROR"):
             seq_obj = Seq(input_seq)
             
-            # --- BUMPED LIMIT TO 300,000 BP ---
+            # --- HIGH CAPACITY LIMIT (300k bp) ---
             if len(seq_obj) > 300000:
                 too_long = True
             else:
                 blast_status = "Not Run"
                 if action == 'blast':
                     try:
+                        search_seq = input_seq
+                        is_sliced = False
+                        # SMART SLICE: If sequence is > 10kb, take a 1500bp slice to avoid NCBI rejection
                         if len(seq_obj) > 10000:
-                            blast_status = "Sequence too large for live BLAST."
+                            mid = len(seq_obj) // 2
+                            search_seq = input_seq[mid:mid+1500]
+                            is_sliced = True
+                        
+                        result_handle = NCBIWWW.qblast("blastn", "nt", search_seq, hitlist_size=1, megablast=True)
+                        blast_data = result_handle.read()
+                        result_handle.close()
+                        
+                        blast_record = next(NCBIXML.parse(StringIO(blast_data)))
+                        if blast_record.alignments:
+                            match_name = blast_record.alignments[0].title.split('|')[-1].strip()[:100]
+                            blast_status = f"{match_name} (via slice)" if is_sliced else match_name
                         else:
-                            result_handle = NCBIWWW.qblast("blastn", "nt", input_seq, hitlist_size=1, megablast=True)
-                            blast_data = result_handle.read()
-                            result_handle.close()
-                            blast_record = next(NCBIXML.parse(StringIO(blast_data)))
-                            blast_status = blast_record.alignments[0].title.split('|')[-1].strip()[:100] if blast_record.alignments else "No matches found."
+                            blast_status = "No matches found."
                     except:
-                        blast_status = "NCBI Timeout."
+                        blast_status = "NCBI Timeout/Busy."
 
-                rev_comp = str(seq_obj.reverse_complement())
-                gc_cont = f"{(gc_fraction(seq_obj) * 100):.2f}%"
-                full_protein = seq_obj.translate()
-                
-                # --- kDa CALCULATIONS ---
+                # --- MASS CALCULATIONS (kDa) ---
                 try:
                     dna_mass_val = molecular_weight(seq_obj, 'DNA') / 1000
                     dna_display = f"{dna_mass_val:.2f} kDa"
                 except: dna_display = "0.00 kDa"
                 
+                full_protein = seq_obj.translate()
                 try:
                     clean_prot = str(full_protein).replace('*', '')
                     p_mass_val = ProteinAnalysis(clean_prot).molecular_weight() / 1000
                     p_display = f"{p_mass_val:.2f} kDa"
                 except: p_display = "0.00 kDa"
                 
+                # --- OTHER METRICS ---
+                gc_cont = f"{(gc_fraction(seq_obj) * 100):.2f}%"
+                rev_comp = str(seq_obj.reverse_complement())
                 enzymes = {"EcoRI": "GAATTC", "BamHI": "GGATCC", "HindIII": "AAGCTT"}
                 res_found = [f"{n} (@{input_seq.find(s)+1})" for n, s in enzymes.items() if s in input_seq]
                 
-                # 🔓 FULL TRANSLATION - NO SLICING
+                # Full Protein Translation String
                 translation_str = "-".join([IUPACData.protein_letters_1to3.get(aa, "Stp").capitalize() for aa in full_protein])
                 
                 results = {
@@ -138,8 +154,8 @@ def analyzer():
                     "gc_content": gc_cont,
                     "dna_mass": dna_display,
                     "prot_mass": p_display, 
-                    "rev_comp": rev_comp,  # 🔓 FULL
-                    "translation": translation_str,  # 🔓 FULL
+                    "rev_comp": rev_comp,
+                    "translation": translation_str,
                     "restriction": ", ".join(res_found) if res_found else "None Found",
                     "ori": detect_origin(input_seq), 
                     "blast_match": blast_status
@@ -150,7 +166,6 @@ def analyzer():
                 
     return render_template('analyzer.html', results=results, input_seq=input_seq, too_long=too_long)
 
-# ... [amr and primer routes remain exactly the same as previous version] ...
 @app.route('/amr', methods=['GET', 'POST'])
 def amr():
     amr_results = []
@@ -160,6 +175,7 @@ def amr():
         if action == 'fetch':
             acc_id = request.form.get('accession_id', '').strip()
             try:
+                # gbwithparts is faster for RefSeq IDs like NG_
                 handle = Entrez.efetch(db="nucleotide", id=acc_id, rettype="gbwithparts", retmode="text")
                 record = next(SeqIO.parse(handle, "genbank"))
                 handle.close()
